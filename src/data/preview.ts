@@ -74,7 +74,8 @@ export const fotos = {
   autonomo: '/img/worker3.webp',
   // lote 2 — objetos, luz escura (lado "antes")
   contasNaMesa: '/img/bill3.webp',
-  contasVertical: '/img/table2.webp',
+  contasQuadrada: '/img/table1b.webp',   // versão 1:1, melhor centrada que a 1:2
+  contasEspalhadas: '/img/bill2.webp',
   cartaoECelular: '/img/card2.webp',
   comprovante: '/img/done1.webp',
   conferindo: '/img/check4.webp',

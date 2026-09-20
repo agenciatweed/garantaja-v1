@@ -16,7 +16,7 @@ const passos = [
 
 const situacoes = [
   { antes: fotos.contasNaMesa, altA: 'contas e um boleto sobre a mesa da cozinha', depois: fotos.pagandoPeloCelular, altD: 'homem pagando uma conta pelo celular', t: 'a conta de luz que não espera', d: 'o corte é dia 20 e o salário é dia 30. dez dias de diferença que ninguém explica pra concessionária.' },
-  { antes: fotos.contasVertical, altA: 'contas, calculadora e caneta sobre a mesa', depois: fotos.maeComFilho, altD: 'mãe com o filho em casa', t: 'o remédio que acabou no meio do mês', d: 'não dá pra parcelar remédio na farmácia. e não dá pra esperar o mês virar.' },
+  { antes: fotos.contasQuadrada, altA: 'contas, calculadora e caneta sobre a mesa', depois: fotos.maeComFilho, altD: 'mãe com o filho em casa', t: 'o remédio que acabou no meio do mês', d: 'não dá pra parcelar remédio na farmácia. e não dá pra esperar o mês virar.' },
   { antes: fotos.cartaoECelular, altA: 'mãos segurando um cartão de crédito e um celular', depois: fotos.comercio, altD: 'pequeno comerciante no balcão da loja', t: 'a reposição que o caixa não cobre', d: 'quem vende precisa repor. às vezes a reposição chega antes do dinheiro da venda.' },
 ];
 ---
@@ -58,6 +58,7 @@ const situacoes = [
   <!-- ── quem pode: a resposta é curta, e a brevidade é o argumento ────── -->
   <section class="secao">
     <div class="container quem-pode">
+      <div class="quem-pode-texto">
       <h2 class="t-headline">tem cartão de crédito?<br />então dá pra começar.</h2>
       <p class="t-lead suave">
         o portão é esse. como é o seu cartão que compra a garantia, não existe um score
@@ -77,6 +78,11 @@ const situacoes = [
         não prometemos aprovação garantida. a simulação mostra as condições reais antes
         de você aceitar qualquer coisa.
       </p>
+      </div>
+
+      <div class="quem-pode-mascote" aria-hidden="true">
+        <img src="/img/mascot.webp" alt="" width="788" height="1222" loading="lazy" />
+      </div>
     </div>
   </section>
 
@@ -102,7 +108,7 @@ const situacoes = [
       </ol>
 
       <div class="passos-foto">
-        <Foto src={fotos.cartaoECelular} alt="mãos segurando um cartão de crédito ao lado de um celular" proporcao="1:1" />
+        <Foto src={fotos.comprovante} alt="celular na mão mostrando a confirmação com um visto verde na tela" proporcao="1:1" />
         <div class="passos-nota">
           <h3 class="t-title">o título fica no seu nome</h3>
           <p class="t-body suave">
@@ -128,8 +134,8 @@ const situacoes = [
               <p class="t-body suave">{s.d}</p>
             </div>
             <div slot="depois" class="situacao-fotos">
-              <Foto src={s.antes} alt={s.altA} proporcao={i === 1 ? '1:2' : (i === 2 ? '1:1' : '2:1')} class="f-antes" />
-              <Foto src={s.depois} alt={s.altD} proporcao={i === 1 ? '1:1' : (i === 2 ? '2:1' : '1:1')} class="f-depois" />
+              <Foto src={s.antes} alt={s.altA} proporcao="3:2" class="f-antes" />
+              <Foto src={s.depois} alt={s.altD} proporcao="1:1" class="f-depois" posicao={i === 2 ? '50% 34%' : '50% 50%'} />
             </div>
           </Par>
         ))}
@@ -169,6 +175,7 @@ const situacoes = [
         antes de assinar qualquer coisa.
       </p>
 
+      <div class="custo-grade">
       <div class="exemplo" role="group" aria-label="exemplo de simulação">
         <p class="exemplo-rotulo t-label suave">exemplo de simulação</p>
         <p class="t-stat valor">{condicoes.valorExemplo}</p>
@@ -180,6 +187,22 @@ const situacoes = [
           números de demonstração, para visualização desta prévia. as condições reais
           aparecem na sua simulação.
         </p>
+      </div>
+
+      <aside class="custo-acao">
+        <svg class="custo-icone" width="48" height="48" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M4 7h10M18 7h2M4 12h4M12 12h8M4 17h12M20 17h0" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" fill="none" />
+          <circle cx="16" cy="7" r="2.4" stroke="currentColor" stroke-width="1.75" fill="none" />
+          <circle cx="10" cy="12" r="2.4" stroke="currentColor" stroke-width="1.75" fill="none" />
+          <circle cx="18" cy="17" r="2.4" stroke="currentColor" stroke-width="1.75" fill="none" />
+        </svg>
+        <h3 class="t-title">veja o seu número</h3>
+        <p class="t-body suave">
+          você escolhe de quanto precisa e o custo aparece na mesma tela. sem consulta
+          ao spc e sem compromisso.
+        </p>
+        <Botao href="/simulador" largura="cheia">simular agora</Botao>
+      </aside>
       </div>
     </div>
   </section>
@@ -262,7 +285,26 @@ const situacoes = [
   }
 
   /* ── quem pode ─────────────────────────────────────────────────────── */
+  .quem-pode { display: grid; gap: var(--s-2xl); align-items: center; }
   .quem-pode h2 { text-wrap: balance; max-width: 18ch; }
+
+  /* o mascote é guia, nunca cliente: bloco próprio, longe da fotografia real */
+  .quem-pode-mascote { display: none; }
+  @media (min-width: 1024px) {
+    .quem-pode { grid-template-columns: 1fr 0.42fr; gap: var(--s-3xl); }
+    .quem-pode-mascote {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      background: var(--azul-suave);
+      border-radius: var(--r-xl);
+      padding: var(--s-lg) var(--s-lg) 0;
+      align-self: stretch;
+      min-height: 340px;
+      overflow: hidden;
+    }
+    .quem-pode-mascote img { width: auto; height: 320px; max-width: 100%; object-fit: contain; }
+  }
   .quem-pode .t-lead { margin-top: var(--s-lg); }
   .requisitos {
     margin-top: var(--s-xl);
@@ -326,18 +368,42 @@ const situacoes = [
   .situacao-texto h3 { margin-bottom: var(--s-sm); }
   .situacao-fotos { display: grid; gap: var(--s-md); grid-template-columns: 1fr; }
   @media (min-width: 640px) {
-    .situacao-fotos { grid-template-columns: 1fr 1fr; align-items: center; }
+    .situacao-fotos { grid-template-columns: 1fr 1fr; align-items: end; }
   }
 
   /* ── segurança ─────────────────────────────────────────────────────── */
   .seguranca { display: grid; gap: var(--s-xl); }
   @media (min-width: 1024px) {
-    .seguranca { grid-template-columns: 1.15fr 0.85fr; align-items: center; gap: var(--s-2xl); }
+    /* a foto acompanha a altura do bloco azul e recorta o excedente */
+    .seguranca { grid-template-columns: 1.15fr 0.85fr; align-items: stretch; gap: var(--s-2xl); }
+    .conferindo { min-height: 0; }
+    .conferindo :global(.foto) { height: 100%; }
+    .conferindo :global(.foto img) { height: 100%; aspect-ratio: auto; object-fit: cover; }
   }
 
   /* ── custo ─────────────────────────────────────────────────────────── */
+  .custo-grade { margin-top: var(--s-2xl); display: grid; gap: var(--s-lg); align-items: stretch; }
+  @media (min-width: 900px) {
+    .custo-grade { grid-template-columns: 1.25fr 0.75fr; gap: var(--s-xl); }
+  }
+
+  .custo-acao {
+    background: var(--azul-suave);
+    border-radius: var(--r-xl);
+    padding: clamp(24px, 4vw, 36px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--s-sm);
+  }
+  .custo-icone { color: var(--azul); margin-bottom: var(--s-2xs); }
+  .custo-acao h3 { text-wrap: balance; }
+  .custo-acao p { font-size: var(--fs-body-sm); }
+  .custo-acao :global(.botao) { margin-top: var(--s-md); }
+
   .exemplo {
-    margin-top: var(--s-2xl);
+    margin-top: 0;
     background: var(--cinza-claro);
     border-radius: var(--r-xl);
     padding: clamp(24px, 5vw, 40px);

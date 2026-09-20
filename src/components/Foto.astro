@@ -2,14 +2,14 @@
 interface Props {
   src: string;
   alt: string;
-  proporcao?: '4:1' | '3:1' | '2:1' | '1:1' | '1:2';
+  proporcao?: '4:1' | '3:1' | '2:1' | '3:2' | '1:1' | '1:2';
   posicao?: string;
   prioridade?: boolean;
   class?: string;
 }
 const { src, alt, proporcao = '2:1', posicao = '50% 50%', prioridade = false, class: extra = '' } = Astro.props;
-const ratios: Record<string, string> = { '4:1': '4 / 1', '3:1': '3 / 1', '2:1': '2 / 1', '1:1': '1 / 1', '1:2': '1 / 2' };
-const dims: Record<string, [number, number]> = { '4:1': [1536, 384], '3:1': [1536, 512], '2:1': [1536, 768], '1:1': [1024, 1024], '1:2': [768, 1536] };
+const ratios: Record<string, string> = { '4:1': '4 / 1', '3:1': '3 / 1', '2:1': '2 / 1', '3:2': '3 / 2', '1:1': '1 / 1', '1:2': '1 / 2' };
+const dims: Record<string, [number, number]> = { '4:1': [1536, 384], '3:1': [1536, 512], '2:1': [1536, 768], '3:2': [1536, 1024], '1:1': [1024, 1024], '1:2': [768, 1536] };
 const [w, h] = dims[proporcao];
 ---
 
