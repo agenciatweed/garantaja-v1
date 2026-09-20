@@ -288,22 +288,20 @@ const situacoes = [
   .quem-pode { display: grid; gap: var(--s-2xl); align-items: center; }
   .quem-pode h2 { text-wrap: balance; max-width: 18ch; }
 
-  /* o mascote é guia, nunca cliente: bloco próprio, longe da fotografia real */
+  /* o mascote é guia, nunca cliente. aqui não há fotografia real por perto,
+     então ele fica direto sobre o branco, sem caixa. */
   .quem-pode-mascote { display: none; }
   @media (min-width: 1024px) {
-    .quem-pode { grid-template-columns: 1fr 0.42fr; gap: var(--s-3xl); }
+    .quem-pode { grid-template-columns: 1fr 0.46fr; gap: var(--s-2xl); }
     .quem-pode-mascote {
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       justify-content: center;
-      background: var(--azul-suave);
-      border-radius: var(--r-xl);
-      padding: var(--s-lg) var(--s-lg) 0;
-      align-self: stretch;
-      min-height: 340px;
-      overflow: hidden;
     }
-    .quem-pode-mascote img { width: auto; height: 320px; max-width: 100%; object-fit: contain; }
+    .quem-pode-mascote img { width: auto; height: 460px; max-width: 100%; object-fit: contain; }
+  }
+  @media (min-width: 1280px) {
+    .quem-pode-mascote img { height: 500px; }
   }
   .quem-pode .t-lead { margin-top: var(--s-lg); }
   .requisitos {
@@ -368,7 +366,7 @@ const situacoes = [
   .situacao-texto h3 { margin-bottom: var(--s-sm); }
   .situacao-fotos { display: grid; gap: var(--s-md); grid-template-columns: 1fr; }
   @media (min-width: 640px) {
-    .situacao-fotos { grid-template-columns: 1fr 1fr; align-items: end; }
+    .situacao-fotos { grid-template-columns: 1fr 1fr; align-items: center; }
   }
 
   /* ── segurança ─────────────────────────────────────────────────────── */

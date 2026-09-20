@@ -454,7 +454,7 @@ It is how the site says *this part matters* without shouting in yellow or spendi
 
 He is a **guide, never a customer**. He explains, points at, reacts to, and celebrates — in the simulator, in the "como funciona" steps, in empty and success states, in blog illustrations, and in error recovery. He is never presented as a testimonial, a user, or a result.
 
-He must not share a composition with the commissioned photography: a cartoon standing beside real people undermines "pessoas reais" instantly. Give him his own block, on `amarelo-suave`, `azul-suave`, or a flat `azul-garanta` panel. Maximum `320px` tall on desktop, `200px` on mobile. Never crop him mid-limb; never recolour him.
+He must not share a composition with the commissioned photography: a cartoon standing beside real people undermines "pessoas reais" instantly. Where photography is nearby, give him his own block on `amarelo-suave`, `azul-suave`, or a flat `azul-garanta` panel; where the surrounding block carries no photography, he stands directly on the surface, since his PNG is already transparent and the separation is already there. Up to `500px` tall on desktop, `200px` on mobile. Never crop him mid-limb; never recolour him.
 
 ### Faixa de Topo
 
