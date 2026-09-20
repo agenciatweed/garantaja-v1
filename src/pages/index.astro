@@ -369,6 +369,54 @@ const situacoes = [
     .situacao-fotos { grid-template-columns: 1fr 1fr; align-items: center; }
   }
 
+  /* ── o par que resolve ─────────────────────────────────────────────
+     A tese da página é que toda seção é um par: tensão, depois resolução.
+     Até aqui isso só existia na composição parada. Agora acontece no tempo:
+     o problema entra primeiro, a solução chega atrás e é a última a assentar.
+
+     O padrão é visível. A animação só recorta a partir dele, então sem
+     suporte, sem JS ou com movimento reduzido a seção fica exatamente como
+     está hoje — nada some. Roda no compositor, custo zero de banda. */
+  @keyframes par-tensao {
+    from { clip-path: inset(0 0 26% 0 round var(--r-xl)); transform: translateY(20px); }
+    to   { clip-path: inset(0 0 0 0 round var(--r-xl)); transform: translateY(0); }
+  }
+  @keyframes par-resolucao {
+    from { clip-path: inset(0 0 30% 0 round var(--r-xl)); transform: translateY(26px) scale(1.018); }
+    to   { clip-path: inset(0 0 0 0 round var(--r-xl)); transform: translateY(0) scale(1); }
+  }
+  /* o par espelhado resolve pelo outro lado, para o ritmo não virar loop */
+  @keyframes par-tensao-alt {
+    from { clip-path: inset(26% 0 0 0 round var(--r-xl)); transform: translateY(-20px); }
+    to   { clip-path: inset(0 0 0 0 round var(--r-xl)); transform: translateY(0); }
+  }
+  @keyframes par-resolucao-alt {
+    from { clip-path: inset(30% 0 0 0 round var(--r-xl)); transform: translateY(-26px) scale(1.018); }
+    to   { clip-path: inset(0 0 0 0 round var(--r-xl)); transform: translateY(0) scale(1); }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .situacao-fotos :global(.f-antes),
+      .situacao-fotos :global(.f-depois) {
+        animation-timeline: view();
+        animation-duration: auto;   /* sem isto a duração é 0s e o scroll não conduz */
+        animation-fill-mode: both;
+        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .situacao-fotos :global(.f-antes) {
+        animation-name: par-tensao;
+        animation-range: entry 5% entry 80%;
+      }
+      .situacao-fotos :global(.f-depois) {
+        animation-name: par-resolucao;
+        animation-range: entry 25% entry 100%;
+      }
+      :global(.par.inverter) .situacao-fotos :global(.f-antes) { animation-name: par-tensao-alt; }
+      :global(.par.inverter) .situacao-fotos :global(.f-depois) { animation-name: par-resolucao-alt; }
+    }
+  }
+
   /* ── segurança ─────────────────────────────────────────────────────── */
   .seguranca { display: grid; gap: var(--s-xl); }
   @media (min-width: 1024px) {

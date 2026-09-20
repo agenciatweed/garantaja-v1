@@ -22,6 +22,7 @@ colors:
   escuro-texto: "#B9BFC8"
   escuro-suave: "#8C94A0"
   escuro-linha: "#333B45"
+  azul-texto: "#C9D6E6"
 typography:
   display:
     fontFamily: "Poppins, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
