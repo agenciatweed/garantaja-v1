@@ -1,0 +1,37 @@
+---
+/**
+ * Par — o componente assinatura desta composição.
+ * Toda seção da home é um par: a tensão de um lado, a resolução do outro.
+ * Empilha no celular, vira esquerda/direita a partir de 1024px.
+ *
+ * Regra do PRODUCT.md: o lado "antes" usa o lote fotográfico escuro (objetos),
+ * o lado "depois" usa o lote claro (pessoas). A quebra tonal é o sinal do par.
+ */
+interface Props {
+  inverter?: boolean;
+  class?: string;
+}
+const { inverter = false, class: extra = '' } = Astro.props;
+---
+
+<div class:list={['par', { inverter }, extra]}>
+  <div class="lado antes"><slot name="antes" /></div>
+  <div class="lado depois"><slot name="depois" /></div>
+</div>
+
+<style>
+  .par {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-xl);
+    align-items: center;
+  }
+  .lado { min-width: 0; }
+
+  @media (min-width: 1024px) {
+    .par { grid-template-columns: 5fr 7fr; gap: var(--s-3xl); }
+    .par.inverter { grid-template-columns: 7fr 5fr; }
+    .par.inverter .antes { order: 2; }
+    .par.inverter .depois { order: 1; }
+  }
+</style>

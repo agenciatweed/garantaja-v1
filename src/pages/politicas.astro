@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Botao from '../components/Botao.astro';
+import { empresa, contato } from '../data/preview';
+
+const secoes = [
+  { id: 'privacidade', t: 'política de privacidade', d: 'como os dados que você informa são coletados, usados, armazenados e por quanto tempo, e quais são os seus direitos como titular sob a LGPD.' },
+  { id: 'cookies', t: 'política de cookies', d: 'quais cookies o site usa, para quê, e como recusar os não essenciais.' },
+  { id: 'credito', t: 'condições da operação de crédito', d: 'valores, custo efetivo total, encargos, prazos, regras de quitação antecipada e as condições do título de capitalização que garante a operação.' },
+  { id: 'governanca', t: 'governança e conduta', d: 'políticas internas da empresa, canal de denúncias e tratamento de conflitos de interesse.' },
+  { id: 'atendimento', t: 'atendimento e ouvidoria', d: 'prazos de resposta, fluxo de reclamação e como escalar um caso não resolvido.' },
+];
+---
+
+<BaseLayout
+  title="Políticas — Garanta Já"
+  description="Políticas de privacidade, cookies, condições da operação de crédito, governança e atendimento."
+>
+  <section class="secao capa">
+    <div class="container">
+      <h1 class="t-display">políticas.</h1>
+      <p class="t-lead sub">
+        esta página ainda não tem os textos definitivos. em vez de publicar
+        modelo genérico copiado, a gente deixa claro o que vai estar aqui e
+        quem responde por isso.
+      </p>
+    </div>
+  </section>
+
+  <section class="secao-curta">
+    <div class="container lista">
+      {secoes.map((s) => (
+        <section class="bloco" id={s.id}>
+          <h2 class="t-title">{s.t}</h2>
+          <p class="t-body suave">{s.d}</p>
+          <p class="estado">em elaboração jurídica · será publicada antes do lançamento</p>
+        </section>
+      ))}
+    </div>
+  </section>
+
+  <section class="secao fundo-claro">
+    <div class="container responsavel">
+      <h2 class="t-headline">quem responde</h2>
+      <dl class="dados tabular">
+        <div><dt>razão social</dt><dd>{empresa.razaoSocial}</dd></div>
+        <div><dt>cnpj</dt><dd>{empresa.cnpj}</dd></div>
+        <div><dt>contato</dt><dd><a href={`mailto:${contato.email}`}>{contato.email}</a></dd></div>
+      </dl>
+      <p class="encarregado">
+        o encarregado de dados (DPO) exigido pela LGPD será identificado aqui
+        junto com a publicação da política de privacidade.
+      </p>
+      <Botao href="/seguranca" variante="secundario">ver canais oficiais</Botao>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .capa h1 { text-wrap: balance; }
+  .capa .sub { margin-top: var(--s-lg); color: var(--cinza-medio); }
+
+  .lista { display: grid; gap: var(--s-xl); max-width: 52rem; }
+  .bloco { border-top: 1px solid var(--linha); padding-top: var(--s-lg); }
+  .bloco h2 { margin-bottom: var(--s-xs); }
+  .estado {
+    margin-top: var(--s-sm);
+    font-size: var(--fs-small);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--azul);
+  }
+
+  .responsavel { max-width: 46rem; }
+  .dados { margin-top: var(--s-lg); display: grid; gap: var(--s-sm); }
+  .dados > div { display: flex; justify-content: space-between; gap: var(--s-md); flex-wrap: wrap; }
+  .dados dt { color: var(--cinza-medio); }
+  .dados dd { margin: 0; font-weight: 600; }
+  .encarregado { margin-block: var(--s-lg); color: var(--cinza-medio); font-size: var(--fs-body-sm); max-width: 56ch; }
+</style>

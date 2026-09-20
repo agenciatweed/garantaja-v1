@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.astro/
+.vercel/
+
+# trabalho do impeccable — comps, capturas de revisão
+.impeccable/mocks/
+.impeccable/review/
+
+# biblioteca fotográfica original em PNG (~93 MB).
+# O que o site serve são as versões WebP em public/img/.
+# Guarde os originais fora do repositório.
+assets/
+
+.DS_Store
+Thumbs.db
+.impeccable/questions/

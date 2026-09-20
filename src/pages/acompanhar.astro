@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Botao from '../components/Botao.astro';
+import BlocoAzul from '../components/BlocoAzul.astro';
+import { contato } from '../data/preview';
+
+const etapas = [
+  { t: 'simulação feita', d: 'você viu as condições. nada foi contratado ainda.' },
+  { t: 'título comprado', d: 'a compra no cartão foi aprovada e o título está no seu nome.' },
+  { t: 'operação fechada', d: 'a garantia está registrada e o crédito foi aprovado.' },
+  { t: 'dinheiro liberado', d: 'o valor saiu para a sua conta.' },
+];
+---
+
+<BaseLayout
+  title="Acompanhar operação — Garanta Já"
+  description="Veja em que etapa está a sua operação e fale com o atendimento oficial do Garanta Já."
+>
+  <section class="secao capa">
+    <div class="container">
+      <h1 class="t-display">já contratou?<br />veja onde está.</h1>
+      <p class="t-lead sub">
+        esperar sem informação é a pior parte. aqui você vê a etapa da sua
+        operação e fala com gente quando precisar.
+      </p>
+    </div>
+  </section>
+
+  <section class="secao-curta">
+    <div class="container acompanhar">
+      <div class="consulta">
+        <h2 class="t-title">consultar</h2>
+        <p class="t-body suave">
+          a consulta por cpf vai funcionar assim que a jornada de contratação
+          estiver ligada. enquanto isso, o whatsapp oficial responde na hora.
+        </p>
+        <Botao href={contato.whatsappLink}>perguntar no whatsapp</Botao>
+        <p class="indisponivel" role="note">
+          consulta automática ainda indisponível nesta prévia
+        </p>
+      </div>
+
+      <ol class="trilha">
+        {etapas.map((e) => (
+          <li class="etapa">
+            <span class="ponto" aria-hidden="true"></span>
+            <div>
+              <h3 class="t-title">{e.t}</h3>
+              <p class="t-body suave">{e.d}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="secao fundo-claro">
+    <div class="container">
+      <BlocoAzul titulo="se alguém te cobrar pra liberar, é golpe">
+        <p>
+          depois de contratar, nenhuma etapa pede pagamento extra. não existe
+          taxa de liberação, de desbloqueio ou de antecipação. se você receber
+          uma cobrança dessas, não pague e fale com a gente.
+        </p>
+        <Botao slot="acao" href="/seguranca" variante="sobre-azul">conferir canais oficiais</Botao>
+      </BlocoAzul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .capa h1 { text-wrap: balance; }
+  .capa .sub { margin-top: var(--s-lg); color: var(--cinza-medio); }
+
+  .acompanhar { display: grid; gap: var(--s-2xl); align-items: start; }
+
+  .consulta {
+    background: var(--cinza-claro);
+    border-radius: var(--r-xl);
+    padding: clamp(24px, 5vw, 40px);
+  }
+  .consulta p { margin-block: var(--s-sm) var(--s-lg); }
+  .indisponivel {
+    margin-top: var(--s-md) !important;
+    margin-bottom: 0 !important;
+    font-size: var(--fs-small);
+    color: var(--cinza-medio);
+  }
+
+  .trilha { display: grid; gap: var(--s-xl); position: relative; }
+  .etapa { display: flex; gap: var(--s-md); align-items: flex-start; position: relative; }
+  .etapa:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 9px;
+    top: 26px;
+    bottom: calc(var(--s-xl) * -1 + 6px);
+    width: 2px;
+    background: var(--linha);
+  }
+  .ponto {
+    flex: none;
+    width: 20px; height: 20px;
+    margin-top: 4px;
+    border-radius: 50%;
+    background: var(--branco);
+    box-shadow: inset 0 0 0 3px var(--verde);
+  }
+  .etapa h3 { margin-bottom: var(--s-2xs); }
+
+  @media (min-width: 1024px) {
+    .acompanhar { grid-template-columns: 0.9fr 1.1fr; gap: var(--s-3xl); }
+  }
+</style>

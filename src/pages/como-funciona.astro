@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Botao from '../components/Botao.astro';
+import BlocoAzul from '../components/BlocoAzul.astro';
+import Foto from '../components/Foto.astro';
+import { fotos, condicoes } from '../data/preview';
+
+const etapas = [
+  {
+    n: '1',
+    t: 'você simula',
+    d: 'diz de quanto precisa. a simulação devolve o valor, o custo efetivo total e as parcelas, na mesma tela, antes de qualquer compromisso.',
+    obs: 'nenhum dado seu é consultado em birô de crédito nesta etapa.',
+  },
+  {
+    n: '2',
+    t: 'o cartão compra o título',
+    d: 'a compra acontece no limite que você já tem. é um título de capitalização emitido no seu nome — não é tarifa, não é seguro, e não fica com a gente.',
+    obs: 'é por isso que o cartão é a única exigência real.',
+  },
+  {
+    n: '3',
+    t: 'o título garante a operação',
+    d: 'esse título é a garantia do crédito. como a garantia já existe no momento da contratação, não há risco de inadimplência para precificar com score.',
+    obs: 'é a razão técnica de não haver consulta ao spc.',
+  },
+  {
+    n: '4',
+    t: 'o dinheiro cai na sua conta',
+    d: 'com a operação fechada, o valor é liberado e você resolve o que precisava resolver.',
+    obs: 'o prazo de liberação é informado na simulação.',
+  },
+];
+---
+
+<BaseLayout
+  title="Como funciona o Garanta Já — crédito com garantia em título de capitalização"
+  description="A operação explicada em quatro etapas, sem juridiquês: o cartão compra um título de capitalização, o título é a garantia, e o crédito sai."
+>
+  <section class="secao capa">
+    <div class="container">
+      <h1 class="t-display">o passo estranho<br />explicado primeiro.</h1>
+      <p class="t-lead sub">
+        quase todo crédito rápido esconde a mecânica no rodapé. aqui ela é a
+        primeira coisa que a gente mostra, porque é ela que faz a conta fechar.
+      </p>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container">
+      <ol class="etapas">
+        {etapas.map((e) => (
+          <li class="etapa">
+            <span class="etapa-n" aria-hidden="true">{e.n}</span>
+            <div class="etapa-corpo">
+              <h2 class="t-title">{e.t}</h2>
+              <p class="t-body suave">{e.d}</p>
+              <p class="etapa-obs">{e.obs}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="secao fundo-claro">
+    <div class="container duas">
+      <div>
+        <h2 class="t-headline">o que é um título de capitalização</h2>
+        <p class="t-body suave espaco">
+          é um produto financeiro regulado, emitido por uma sociedade de capitalização
+          autorizada. você compra o título, ele fica no seu nome, e tem regras próprias
+          de resgate e prazo.
+        </p>
+        <p class="t-body suave espaco">
+          no Garanta Já ele cumpre um papel específico: ser a garantia do seu crédito.
+          é isso que permite aprovar sem olhar seu histórico — a segurança da operação
+          não vem do seu passado, vem do título.
+        </p>
+        <p class="pendente">
+          o registro susep do título e a identificação da sociedade emissora serão
+          publicados aqui antes do lançamento.
+        </p>
+      </div>
+      <Foto src={fotos.cartaoECelular} alt="mãos segurando um cartão de crédito ao lado de um celular sobre a mesa" proporcao="1:1" />
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container">
+      <BlocoAzul titulo="o que a gente nunca vai pedir">
+        <p>
+          nenhum depósito antecipado. nenhuma taxa para “liberar” ou “destravar”.
+          nenhum pagamento por fora, por pix pessoal ou para terceiros.
+        </p>
+        <p>
+          todo o custo da operação está no custo efetivo total que aparece na
+          simulação — <span class="tabular">{condicoes.cetMensal}</span> no exemplo
+          desta prévia. não existe custo que apareça depois.
+        </p>
+        <Botao slot="acao" href="/seguranca" variante="sobre-azul">como confirmar que é a gente</Botao>
+      </BlocoAzul>
+    </div>
+  </section>
+
+  <section class="secao fundo-claro">
+    <div class="container fecho">
+      <h2 class="t-headline">entendeu a mecânica? então vale ver os números.</h2>
+      <Botao href="/simulador">simular agora</Botao>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .capa h1 { text-wrap: balance; max-width: 16ch; }
+  .capa .sub { margin-top: var(--s-lg); color: var(--cinza-medio); }
+
+  .etapas { display: grid; gap: var(--s-2xl); }
+  .etapa { display: flex; gap: var(--s-lg); align-items: flex-start; }
+  .etapa-n {
+    flex: none;
+    font-size: var(--fs-numeral);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: var(--amarelo);
+    min-width: 1.4ch;
+    font-variant-numeric: tabular-nums;
+  }
+  .etapa-corpo h2 { margin-bottom: var(--s-xs); }
+  .etapa-obs {
+    margin-top: var(--s-sm);
+    font-size: var(--fs-body-sm);
+    color: var(--azul);
+    font-weight: 500;
+    max-width: 52ch;
+  }
+
+  .duas { display: grid; gap: var(--s-xl); align-items: center; }
+  .espaco { margin-top: var(--s-md); }
+  .pendente {
+    margin-top: var(--s-lg);
+    font-size: var(--fs-small);
+    line-height: 1.5;
+    color: var(--cinza-medio);
+    border-left: 1px solid var(--linha-forte);
+    padding-left: var(--s-md);
+    max-width: 52ch;
+  }
+  @media (min-width: 1024px) {
+    .duas { grid-template-columns: 1.15fr 0.85fr; gap: var(--s-3xl); }
+    .etapas { gap: var(--s-3xl); }
+  }
+
+  .fecho h2 { text-wrap: balance; max-width: 24ch; margin-bottom: var(--s-xl); }
+</style>

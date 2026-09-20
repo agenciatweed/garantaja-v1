@@ -1,0 +1,72 @@
+---
+interface Props {
+  href: string;
+  variante?: 'primario' | 'secundario' | 'sobre-azul' | 'texto';
+  largura?: 'auto' | 'cheia';
+  class?: string;
+}
+const { href, variante = 'primario', largura = 'auto', class: extra = '' } = Astro.props;
+---
+
+<a href={href} class:list={['botao', variante, largura, extra]}>
+  <slot />
+</a>
+
+<style>
+  .botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-xs);
+    min-height: 56px;
+    padding: 16px 32px;
+    border-radius: var(--r-pill);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    text-align: center;
+    transition: background 180ms var(--ease), color 180ms var(--ease),
+                transform 180ms var(--ease), box-shadow 180ms var(--ease);
+  }
+  .cheia { width: 100%; }
+
+  .primario { background: var(--verde-acao); color: var(--branco); }
+  .primario:hover {
+    background: var(--verde-acao-profundo);
+    color: var(--branco);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-resposta);
+  }
+
+  .secundario {
+    background: var(--branco);
+    color: var(--azul);
+    box-shadow: inset 0 0 0 1.5px var(--azul);
+  }
+  .secundario:hover { background: var(--azul-suave); color: var(--azul-profundo); }
+
+  .sobre-azul { background: var(--amarelo); color: var(--cinza-escuro); }
+  .sobre-azul:hover {
+    background: var(--amarelo-pressionado);
+    color: var(--cinza-escuro);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-resposta);
+  }
+
+  .texto {
+    background: none;
+    color: var(--azul);
+    padding: 12px 0;
+    min-height: 44px;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.22em;
+  }
+  .texto:hover { text-decoration-color: currentColor; }
+
+  @media (max-width: 479px) {
+    .primario, .secundario, .sobre-azul { width: 100%; }
+  }
+</style>

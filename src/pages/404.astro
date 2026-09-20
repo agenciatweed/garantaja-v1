@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Botao from '../components/Botao.astro';
+---
+
+<BaseLayout title="Página não encontrada — Garanta Já" description="Esta página não existe.">
+  <section class="secao erro">
+    <div class="container">
+      <div class="conteudo">
+        <h1 class="t-display">essa página<br />não existe.</h1>
+        <p class="t-lead sub">
+          talvez o link esteja errado, ou a página tenha mudado de lugar.
+          o caminho mais curto pro que você veio fazer está aqui embaixo.
+        </p>
+        <div class="acoes">
+          <Botao href="/simulador">simular agora</Botao>
+          <Botao href="/" variante="secundario">voltar pro início</Botao>
+        </div>
+      </div>
+      <img class="mascote" src="/img/mascot.webp" alt="" width="788" height="1222" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .erro .container { display: grid; gap: var(--s-xl); align-items: center; }
+  .conteudo h1 { text-wrap: balance; }
+  .sub { margin-top: var(--s-lg); color: var(--cinza-medio); }
+  .acoes { margin-top: var(--s-xl); display: flex; gap: var(--s-md); flex-wrap: wrap; }
+  .mascote { width: 200px; height: auto; justify-self: center; }
+  @media (min-width: 768px) {
+    .erro .container { grid-template-columns: 1.4fr 0.6fr; }
+    .mascote { width: 280px; }
+  }
+</style>

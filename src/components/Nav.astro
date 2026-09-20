@@ -1,0 +1,168 @@
+---
+import { contato } from '../data/preview';
+
+const links = [
+  { href: '/como-funciona', label: 'como funciona' },
+  { href: '/seguranca', label: 'segurança' },
+  { href: '/faq', label: 'dúvidas' },
+  { href: '/blog', label: 'conteúdos' },
+];
+const path = Astro.url.pathname;
+const atual = (href: string) => path === href || (href !== '/' && path.startsWith(href));
+---
+
+<div class="faixa-topo">
+  <div class="container faixa-inner">
+    <a href={contato.whatsappLink} class="faixa-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.2 1.2-1.7 1.2-.5.1-1 .1-1.6-.1a12 12 0 0 1-6.4-5.6c-.5-.8-.8-1.7-.8-2.5 0-.9.5-1.4.8-1.6.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2 0 .4-.1.5l-.4.5c-.1.2-.3.3-.1.6.5.9 1.2 1.6 2.1 2.1.2.1.4.1.5 0l.6-.7c.2-.2.3-.2.5-.1l1.8.9c.3.1.4.2.4.4 0 .1 0 .7-.2 1.3Z"/>
+      </svg>
+      <span>whatsapp {contato.whatsappExibicao}</span>
+    </a>
+  </div>
+</div>
+
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="/" class="marca" aria-label="Garanta Já — página inicial">
+      <img src="/img/logo.svg" alt="Garanta Já" width="180" height="27" />
+    </a>
+
+    <nav class="links" aria-label="principal">
+      {links.map((l) => (
+        <a href={l.href} class:list={['link', { ativo: atual(l.href) }]} aria-current={atual(l.href) ? 'page' : undefined}>{l.label}</a>
+      ))}
+    </nav>
+
+    <div class="acoes">
+      <a href="/simulador" class="pilha-cta">simular</a>
+      <button class="hamburguer" type="button" aria-expanded="false" aria-controls="menu-mobile" aria-label="abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="menu-mobile" id="menu-mobile" hidden>
+    <nav aria-label="menu">
+      {links.map((l) => <a href={l.href} class="item">{l.label}</a>)}
+      <a href="/simulador" class="item">simulador</a>
+      <a href="/acompanhar" class="item">acompanhar operação</a>
+      <a href={contato.whatsappLink} class="item">whatsapp {contato.whatsappExibicao}</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .faixa-topo {
+    background: var(--azul);
+    color: var(--branco);
+  }
+  .faixa-inner { display: flex; justify-content: center; }
+  .faixa-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-xs);
+    color: var(--branco);
+    text-decoration: none;
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 9px 0;
+    min-height: 40px;
+  }
+  .faixa-link:hover { color: var(--amarelo); }
+  .faixa-link svg { flex: none; }
+
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--branco);
+    transition: box-shadow 220ms var(--ease);
+  }
+  .nav[data-rolou='true'] { box-shadow: var(--sombra-resposta); }
+
+  .nav-inner {
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-lg);
+  }
+  .marca { display: flex; align-items: center; flex: none; }
+  .marca img { width: 180px; height: auto; }
+
+  .links { display: none; gap: var(--s-lg); }
+  .link {
+    color: var(--cinza-escuro);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: var(--fs-base);
+    padding: var(--s-xs) 0;
+    border-bottom: 3px solid transparent;
+    transition: border-color 160ms var(--ease), color 160ms var(--ease);
+  }
+  .link:hover, .link.ativo { border-bottom-color: var(--amarelo); color: var(--cinza-escuro); }
+
+  .acoes { display: flex; align-items: center; gap: var(--s-sm); flex: none; }
+  .pilha-cta {
+    background: var(--verde-acao);
+    color: var(--branco);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--fs-body-sm);
+    padding: 12px 22px;
+    border-radius: var(--r-pill);
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    transition: background 160ms var(--ease), transform 160ms var(--ease);
+  }
+  .pilha-cta:hover { background: var(--verde-acao-profundo); color: var(--branco); transform: translateY(-2px); }
+
+  .hamburguer {
+    width: 48px; height: 48px;
+    display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+    background: none; border: 0; cursor: pointer; padding: 0;
+    border-radius: var(--r-md);
+  }
+  .hamburguer span { width: 22px; height: 2px; background: var(--cinza-escuro); border-radius: var(--r-pill); transition: transform 200ms var(--ease), opacity 200ms var(--ease); }
+  .hamburguer[aria-expanded='true'] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburguer[aria-expanded='true'] span:nth-child(2) { opacity: 0; }
+  .hamburguer[aria-expanded='true'] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .menu-mobile { border-top: 1px solid var(--linha); background: var(--branco); }
+  .menu-mobile nav { display: flex; flex-direction: column; padding: var(--s-xs) var(--gutter) var(--s-lg); }
+  .menu-mobile .item {
+    display: flex; align-items: center;
+    min-height: 56px;
+    font-size: 1.125rem; font-weight: 500;
+    color: var(--cinza-escuro); text-decoration: none;
+    border-bottom: 1px solid var(--linha);
+  }
+  .menu-mobile .item:last-child { border-bottom: 0; }
+
+  @media (min-width: 1024px) {
+    .links { display: flex; }
+    .hamburguer { display: none; }
+    .menu-mobile { display: none !important; }
+    .pilha-cta { font-size: var(--fs-base); padding: 14px 26px; }
+  }
+</style>
+
+<script>
+  const nav = document.getElementById('nav');
+  const botao = nav?.querySelector('.hamburguer') as HTMLButtonElement | null;
+  const menu = document.getElementById('menu-mobile');
+
+  botao?.addEventListener('click', () => {
+    const aberto = botao.getAttribute('aria-expanded') === 'true';
+    botao.setAttribute('aria-expanded', String(!aberto));
+    botao.setAttribute('aria-label', aberto ? 'abrir menu' : 'fechar menu');
+    if (menu) menu.hidden = aberto;
+  });
+
+  const marcarRolagem = () => nav?.setAttribute('data-rolou', String(window.scrollY > 8));
+  marcarRolagem();
+  window.addEventListener('scroll', marcarRolagem, { passive: true });
+</script>

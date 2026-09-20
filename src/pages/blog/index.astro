@@ -1,0 +1,136 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Botao from '../../components/Botao.astro';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.data.valueOf() - a.data.data.valueOf()
+);
+const [destaque, ...resto] = posts;
+
+const dataBR = (d: Date) =>
+  d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+---
+
+<BaseLayout
+  title="Conteúdos — Garanta Já"
+  description="Textos diretos sobre contas do mês, crédito e como as operações funcionam de verdade."
+>
+  <section class="secao-curta capa">
+    <div class="container">
+      <h1 class="t-display">conteúdos.</h1>
+      <p class="t-lead sub">
+        o que a gente explicaria se você perguntasse pessoalmente. sem
+        juridiquês e sem enrolação.
+      </p>
+    </div>
+  </section>
+
+  {destaque && (
+    <section class="secao-curta">
+      <div class="container">
+        <a href={`/blog/${destaque.id}`} class="destaque">
+          <div class="destaque-foto">
+            <img src={destaque.data.imagem} alt={destaque.data.imagemAlt} width="1536" height="768" fetchpriority="high" />
+          </div>
+          <div class="destaque-texto">
+            <p class="meta tabular">{destaque.data.categoria} · {destaque.data.leitura}</p>
+            <h2 class="t-headline">{destaque.data.titulo}</h2>
+            <p class="t-body suave">{destaque.data.resumo}</p>
+            <span class="ler">ler agora</span>
+          </div>
+        </a>
+      </div>
+    </section>
+  )}
+
+  {resto.length > 0 && (
+    <section class="secao-curta">
+      <div class="container">
+        <ul class="grade">
+          {resto.map((p) => (
+            <li>
+              <a href={`/blog/${p.id}`} class="cartao">
+                <img src={p.data.imagem} alt={p.data.imagemAlt} width="1024" height="1024" loading="lazy" />
+                <div class="cartao-corpo">
+                  <p class="meta tabular">{p.data.categoria} · {p.data.leitura}</p>
+                  <h3 class="t-title">{p.data.titulo}</h3>
+                  <p class="t-body suave resumo">{p.data.resumo}</p>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="secao fundo-claro">
+    <div class="container fecho">
+      <h2 class="t-headline">já sabe o que precisa resolver?</h2>
+      <Botao href="/simulador">simular agora</Botao>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .capa h1 { text-wrap: balance; }
+  .capa .sub { margin-top: var(--s-md); color: var(--cinza-medio); }
+
+  .meta {
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--azul);
+    margin-bottom: var(--s-xs);
+  }
+
+  .destaque {
+    display: grid;
+    gap: var(--s-xl);
+    text-decoration: none;
+    color: inherit;
+    align-items: center;
+  }
+  .destaque-foto { border-radius: var(--r-xl); overflow: hidden; background: var(--cinza-claro); }
+  .destaque-foto img { width: 100%; aspect-ratio: 2 / 1; object-fit: cover; transition: transform 400ms var(--ease); }
+  .destaque:hover .destaque-foto img { transform: scale(1.02); }
+  .destaque h2 { text-wrap: balance; margin-bottom: var(--s-sm); }
+  .ler {
+    display: inline-block;
+    margin-top: var(--s-md);
+    font-weight: 600;
+    color: var(--azul);
+    border-bottom: 3px solid var(--amarelo);
+    padding-bottom: 2px;
+  }
+
+  .grade { display: grid; gap: var(--s-xl); }
+  .cartao {
+    display: grid;
+    gap: var(--s-md);
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+  }
+  .cartao img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--r-lg);
+    background: var(--cinza-claro);
+    transition: transform 400ms var(--ease);
+  }
+  .cartao:hover img { transform: scale(1.02); }
+  .cartao h3 { margin-bottom: var(--s-xs); }
+  .resumo { font-size: var(--fs-base); }
+
+  .fecho h2 { text-wrap: balance; margin-bottom: var(--s-xl); }
+
+  @media (min-width: 768px) {
+    .grade { grid-template-columns: 1fr 1fr; gap: var(--s-2xl); }
+  }
+  @media (min-width: 1024px) {
+    .destaque { grid-template-columns: 1.1fr 0.9fr; gap: var(--s-2xl); }
+  }
+</style>

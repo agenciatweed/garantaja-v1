@@ -1,0 +1,41 @@
+---
+/**
+ * Bloco Azul — device de ênfase vindo do deck da própria marca.
+ * Painel azul, título amarelo, corpo branco. No máximo um por viewport:
+ * uma página com três blocos azuis não tem ênfase nenhuma.
+ * Título sempre >= 20px bold — amarelo sobre azul é 4,3:1 e só passa em texto grande.
+ */
+interface Props {
+  titulo: string;
+  class?: string;
+}
+const { titulo, class: extra = '' } = Astro.props;
+---
+
+<div class:list={['bloco', extra]}>
+  <h2 class="titulo">{titulo}</h2>
+  <div class="corpo"><slot /></div>
+  {Astro.slots.has('acao') && <div class="acao"><slot name="acao" /></div>}
+</div>
+
+<style>
+  .bloco {
+    background: var(--azul);
+    color: var(--branco);
+    border-radius: var(--r-xl);
+    padding: clamp(28px, 5vw, 40px);
+  }
+  .titulo {
+    color: var(--amarelo);
+    font-size: var(--fs-subhead);
+    font-weight: 700;
+    line-height: 1.16;
+    letter-spacing: -0.018em;
+    margin-bottom: var(--s-md);
+    text-wrap: balance;
+  }
+  .corpo { color: #E4ECF5; max-width: 62ch; }
+  .corpo :global(p + p) { margin-top: var(--s-md); }
+  .corpo :global(strong) { color: var(--branco); font-weight: 600; }
+  .acao { margin-top: var(--s-lg); }
+</style>

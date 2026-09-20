@@ -1,0 +1,78 @@
+---
+import '../styles/tokens.css';
+import Nav from '../components/Nav.astro';
+import Rodape from '../components/Rodape.astro';
+import { PREVIEW_MODE, contato } from '../data/preview';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+}
+const { title, description, ogImage = '/img/relief2.webp' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  {PREVIEW_MODE && <meta name="robots" content="noindex, nofollow" />}
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
+  <meta property="og:locale" content="pt_BR" />
+  <meta name="theme-color" content="#0E5AA7" />
+  <link rel="icon" href="/img/icon.svg" type="image/svg+xml" />
+  <link rel="preload" href="/fonts/poppins-800-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/poppins-400-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/fonts/poppins.css" />
+</head>
+<body>
+<!--
+THESIS: Cada seção é um par — a conta que vence, depois a conta paga. Recusa a pilha de benefícios em coluna única que esta categoria sempre entrega.
+OWN-WORLD: Blocos chapados, sem gradiente, glass ou sombra em repouso. Amarelo chama, azul sustenta, verde aciona, cinzas explicam. Poppins só em caixa baixa, cantos generosos, duas sombras.
+STORY: Chega com pressa e desconfiança; entende a escala, vê que não há consulta de score, alcança o simulador.
+FIRST VIEWPORT: Metade cinza com "a conta vence sexta."; metade foto abaixo, card branco sobreposto trazendo "e agora ela está paga.", o chip amarelo e a pílula verde.
+FORM: Antes e Depois, índice 7 de 7, seed 2902e8ab.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+-->
+  <a class="pular-para-conteudo" href="#conteudo">pular para o conteúdo</a>
+  <Nav />
+  <main id="conteudo">
+    <slot />
+  </main>
+  <Rodape />
+  {PREVIEW_MODE && (
+    <div class="aviso-previa" role="note">
+      <strong>prévia</strong> · valores, taxas e contatos nesta página são fictícios e servem só para visualização
+    </div>
+  )}
+  <style>
+    body { padding-bottom: var(--altura-aviso); }
+    .aviso-previa {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      background: var(--cinza-escuro);
+      color: var(--branco);
+      font-size: var(--fs-micro);
+      line-height: 1.4;
+      text-align: center;
+      padding: var(--s-sm) var(--s-md);
+      min-height: var(--altura-aviso);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .aviso-previa strong { color: var(--amarelo); font-weight: 600; }
+  </style>
+</body>
+</html>

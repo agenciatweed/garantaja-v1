@@ -1,0 +1,331 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Botao from '../components/Botao.astro';
+import { condicoes, contato } from '../data/preview';
+---
+
+<BaseLayout
+  title="Simulador — Garanta Já"
+  description="Veja valor, custo efetivo total e parcelas antes de decidir. Simulação sem consulta ao SPC."
+>
+  <section class="secao-curta capa">
+    <div class="container">
+      <h1 class="t-display">de quanto<br />você precisa?</h1>
+      <p class="t-lead sub">
+        a simulação não consulta seu spc e não vale como contratação.
+        é só pra você ver o número antes de decidir.
+      </p>
+    </div>
+  </section>
+
+  <section class="secao-curta">
+    <div class="container sim-grade">
+
+      <form class="painel" id="sim" novalidate>
+        <div class="campo">
+          <label for="valor">valor que você precisa</label>
+          <div class="moeda">
+            <span aria-hidden="true">R$</span>
+            <input
+              id="valor" name="valor" type="text" inputmode="numeric"
+              autocomplete="off" value="850" aria-describedby="valor-ajuda valor-erro"
+            />
+          </div>
+          <input
+            id="faixa" type="range" min="100" max="1000" step="10" value="850"
+            aria-label="valor que você precisa, em reais"
+          />
+          <p id="valor-ajuda" class="ajuda">entre R$ 100 e R$ 1.000 nesta prévia</p>
+          <p id="valor-erro" class="erro" role="alert" hidden></p>
+        </div>
+
+        <fieldset class="campo">
+          <legend>em quantas parcelas</legend>
+          <div class="parcelas" role="radiogroup" aria-label="número de parcelas">
+            {[3, 6, 9, 12].map((n) => (
+              <label class="parcela">
+                <input type="radio" name="parcelas" value={n} checked={n === 6} />
+                <span>{n}x</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      </form>
+
+      <aside class="resultado" id="resultado" aria-live="polite">
+        <p class="t-label suave">você recebe</p>
+        <p class="t-stat valor-saida tabular" id="saida-valor">R$ 850,00</p>
+
+        <dl class="linhas tabular">
+          <div><dt>parcelas</dt><dd id="saida-parcelas">6x de R$ 149,70</dd></div>
+          <div><dt>custo efetivo total</dt><dd>{condicoes.cetMensal}</dd></div>
+          <div><dt>equivalente ao ano</dt><dd>{condicoes.cetAnual}</dd></div>
+          <div class="total"><dt>total a pagar</dt><dd id="saida-total">R$ 898,20</dd></div>
+        </dl>
+
+        <p class="demo">
+          <strong>números de demonstração.</strong> esta prévia calcula sobre uma taxa
+          fictícia de {condicoes.cetMensal}. as condições reais, incluindo iof e
+          encargos, aparecem na contratação.
+        </p>
+
+        <button type="button" class="avancar" id="avancar">quero contratar</button>
+
+        <div class="handoff" id="handoff" hidden role="status">
+          <h2 class="t-title">a contratação ainda não está ligada</h2>
+          <p>
+            a jornada de contratação está sendo construída pela equipe de tecnologia.
+            quando ela existir, este botão leva direto pra lá, sem trocar de identidade
+            visual no caminho.
+          </p>
+          <p class="handoff-agora">
+            enquanto isso, quem quiser seguir fala com a gente no
+            <a href={contato.whatsappLink}>whatsapp {contato.whatsappExibicao}</a>.
+          </p>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+  <section class="secao fundo-claro">
+    <div class="container duvidas">
+      <h2 class="t-headline">antes de decidir</h2>
+      <ul class="lista">
+        <li><strong>não consultamos seu spc.</strong> a garantia é o título comprado no seu cartão, então não há score pra avaliar.</li>
+        <li><strong>a simulação não contrata nada.</strong> nenhum valor é debitado e nenhum título é comprado enquanto você só simula.</li>
+        <li><strong>o custo está todo aqui.</strong> não existe taxa que apareça depois, nem pagamento por fora.</li>
+      </ul>
+      <Botao href="/faq" variante="texto">ver todas as dúvidas</Botao>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .capa h1 { text-wrap: balance; }
+  .capa .sub { margin-top: var(--s-md); color: var(--cinza-medio); }
+
+  .sim-grade { display: grid; gap: var(--s-xl); align-items: start; }
+
+  .painel { display: grid; gap: var(--s-xl); }
+  .campo { border: 0; padding: 0; margin: 0; display: grid; gap: var(--s-sm); }
+  .campo label, .campo legend {
+    font-size: var(--fs-small); font-weight: 500; letter-spacing: 0.06em;
+    color: var(--cinza-medio); padding: 0;
+  }
+
+  .moeda {
+    display: flex; align-items: center; gap: var(--s-xs);
+    background: var(--branco);
+    border: 1px solid var(--linha-forte);
+    border-radius: var(--r-md);
+    padding: 0 var(--s-md);
+    min-height: 68px;
+    transition: border-color 160ms var(--ease), box-shadow 160ms var(--ease);
+  }
+  .moeda:focus-within {
+    border-color: var(--azul);
+    box-shadow: 0 0 0 3px var(--azul-suave);
+  }
+  .moeda span { font-size: var(--fs-subhead); font-weight: 600; color: var(--cinza-medio); }
+  .moeda input {
+    flex: 1; min-width: 0;
+    border: 0; outline: 0; background: none;
+    font-family: var(--fonte);
+    font-size: var(--fs-valor);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--cinza-escuro);
+    font-variant-numeric: tabular-nums;
+    padding: var(--s-sm) 0;
+  }
+
+  input[type='range'] {
+    width: 100%; height: 44px; background: none; -webkit-appearance: none; appearance: none;
+  }
+  input[type='range']::-webkit-slider-runnable-track {
+    height: 6px; border-radius: var(--r-pill); background: var(--linha);
+  }
+  input[type='range']::-moz-range-track {
+    height: 6px; border-radius: var(--r-pill); background: var(--linha);
+  }
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 28px; height: 28px; margin-top: -11px;
+    border-radius: 50%; background: var(--azul); border: 3px solid var(--branco);
+    box-shadow: var(--sombra-repouso); cursor: pointer;
+  }
+  input[type='range']::-moz-range-thumb {
+    width: 28px; height: 28px;
+    border-radius: 50%; background: var(--azul); border: 3px solid var(--branco);
+    box-shadow: var(--sombra-repouso); cursor: pointer;
+  }
+
+  .ajuda { font-size: var(--fs-small); color: var(--cinza-medio); }
+  .erro { font-size: var(--fs-small); color: var(--erro); font-weight: 500; }
+
+  .parcelas { display: flex; gap: var(--s-sm); flex-wrap: wrap; }
+  .parcela { position: relative; }
+  .parcela input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .parcela span {
+    display: flex; align-items: center; justify-content: center;
+    min-width: 72px; min-height: 52px;
+    border-radius: var(--r-pill);
+    background: var(--branco);
+    box-shadow: inset 0 0 0 1px var(--linha-forte);
+    font-weight: 600; font-variant-numeric: tabular-nums;
+    transition: background 160ms var(--ease), box-shadow 160ms var(--ease), color 160ms var(--ease);
+  }
+  .parcela input:checked + span {
+    background: var(--azul); color: var(--branco);
+    box-shadow: inset 0 0 0 1px var(--azul);
+  }
+  .parcela input:focus-visible + span { outline: 3px solid var(--azul); outline-offset: 2px; }
+
+  .resultado {
+    background: var(--cinza-claro);
+    border-radius: var(--r-xl);
+    padding: clamp(24px, 5vw, 40px);
+  }
+  .valor-saida { margin-top: var(--s-2xs); }
+  .linhas {
+    margin-top: var(--s-lg);
+    display: grid; gap: var(--s-sm);
+    border-top: 1px solid var(--linha);
+    padding-top: var(--s-lg);
+  }
+  .linhas > div { display: flex; justify-content: space-between; gap: var(--s-md); flex-wrap: wrap; }
+  .linhas dt { color: var(--cinza-medio); }
+  .linhas dd { margin: 0; font-weight: 600; }
+  .linhas .total { border-top: 1px solid var(--linha); padding-top: var(--s-sm); margin-top: var(--s-2xs); }
+
+  .demo {
+    margin-top: var(--s-lg);
+    font-size: var(--fs-small); line-height: 1.5; color: var(--cinza-medio);
+  }
+  .demo strong { color: var(--cinza-escuro); font-weight: 600; }
+
+  .avancar {
+    margin-top: var(--s-lg);
+    width: 100%;
+    min-height: 56px;
+    padding: 16px 32px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: var(--verde-acao);
+    color: var(--branco);
+    font-family: var(--fonte);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 180ms var(--ease), transform 180ms var(--ease), box-shadow 180ms var(--ease);
+  }
+  .avancar:hover { background: var(--verde-acao-profundo); transform: translateY(-2px); box-shadow: var(--sombra-resposta); }
+
+  .handoff {
+    margin-top: var(--s-lg);
+    background: var(--branco);
+    border-radius: var(--r-lg);
+    padding: var(--s-lg);
+    border: 1px solid var(--linha);
+  }
+  .handoff h2 { margin-bottom: var(--s-xs); }
+  .handoff p { color: var(--cinza-medio); font-size: var(--fs-body-sm); line-height: 1.55; }
+  .handoff-agora { margin-top: var(--s-sm); }
+
+  .duvidas .lista { margin-top: var(--s-lg); display: grid; gap: var(--s-md); max-width: 64ch; }
+  .duvidas .lista li {
+    padding-left: var(--s-lg);
+    position: relative;
+    color: var(--cinza-medio);
+  }
+  .duvidas .lista li::before {
+    content: '';
+    position: absolute; left: 0; top: 0.62em;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--verde);
+  }
+  .duvidas .lista strong { color: var(--cinza-escuro); font-weight: 600; }
+  .duvidas :global(.botao) { margin-top: var(--s-md); }
+
+  @media (min-width: 1024px) {
+    .sim-grade { grid-template-columns: 1fr 1fr; gap: var(--s-3xl); }
+  }
+</style>
+
+<script>
+  // Taxa fictícia desta prévia. Troca em src/data/preview.ts quando a real existir.
+  const TAXA_MENSAL = 0.016;
+
+  const brl = (n: number) =>
+    n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+  const campo = document.getElementById('valor') as HTMLInputElement | null;
+  const faixa = document.getElementById('faixa') as HTMLInputElement | null;
+  const erro = document.getElementById('valor-erro') as HTMLElement | null;
+  const saidaValor = document.getElementById('saida-valor');
+  const saidaParcelas = document.getElementById('saida-parcelas');
+  const saidaTotal = document.getElementById('saida-total');
+  const avancar = document.getElementById('avancar');
+  const handoff = document.getElementById('handoff');
+
+  const MIN = 100;
+  const MAX = 1000;
+
+  function parcelasEscolhidas(): number {
+    const marcado = document.querySelector<HTMLInputElement>('input[name="parcelas"]:checked');
+    return marcado ? Number(marcado.value) : 6;
+  }
+
+  function calcular() {
+    if (!campo) return;
+    const bruto = campo.value.replace(/\D/g, '');
+    const valor = Number(bruto || 0);
+    const n = parcelasEscolhidas();
+
+    if (erro) {
+      if (valor < MIN) {
+        erro.textContent = `digite um valor a partir de ${brl(MIN)}`;
+        erro.hidden = false;
+      } else if (valor > MAX) {
+        erro.textContent = `nesta prévia o valor vai até ${brl(MAX)}`;
+        erro.hidden = false;
+      } else {
+        erro.hidden = true;
+      }
+    }
+
+    const usado = Math.min(Math.max(valor, MIN), MAX);
+    const i = TAXA_MENSAL;
+    const pmt = (usado * i) / (1 - Math.pow(1 + i, -n));
+
+    if (saidaValor) saidaValor.textContent = brl(usado);
+    if (saidaParcelas) saidaParcelas.textContent = `${n}x de ${brl(pmt)}`;
+    if (saidaTotal) saidaTotal.textContent = brl(pmt * n);
+    if (faixa && valor >= MIN && valor <= MAX) faixa.value = String(usado);
+  }
+
+  campo?.addEventListener('input', calcular);
+  faixa?.addEventListener('input', () => {
+    if (campo && faixa) campo.value = faixa.value;
+    calcular();
+  });
+  document.querySelectorAll('input[name="parcelas"]').forEach((el) =>
+    el.addEventListener('change', calcular)
+  );
+
+  /**
+   * LIMITE DE ENTREGA — ponto único de passagem para a jornada de contratação.
+   * Quando a URL real existir, troque o corpo desta função por um redirect.
+   * Nada mais no site precisa mudar.
+   */
+  function irParaContratacao() {
+    if (handoff) {
+      handoff.hidden = false;
+      handoff.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  avancar?.addEventListener('click', irParaContratacao);
+  calcular();
+</script>

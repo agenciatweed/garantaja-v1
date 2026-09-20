@@ -1,0 +1,387 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Botao from '../components/Botao.astro';
+import Chip from '../components/Chip.astro';
+import BlocoAzul from '../components/BlocoAzul.astro';
+import Foto from '../components/Foto.astro';
+import Par from '../components/Par.astro';
+import { fotos, condicoes, empresa } from '../data/preview';
+
+const passos = [
+  { n: '1', t: 'você diz de quanto precisa', d: 'a simulação mostra o valor, o custo e as parcelas antes de qualquer decisão.' },
+  { n: '2', t: 'o cartão compra o título', d: 'um título de capitalização, no seu nome, comprado no limite que você já tem.' },
+  { n: '3', t: 'o título vira a garantia', d: 'é ele que garante a operação. por isso ninguém precisa consultar seu score.' },
+  { n: '4', t: 'o dinheiro cai na sua conta', d: 'e a conta que estava vencendo deixa de ser problema.' },
+];
+
+const situacoes = [
+  { antes: fotos.contasNaMesa, altA: 'contas e um boleto sobre a mesa da cozinha', depois: fotos.pagandoPeloCelular, altD: 'homem pagando uma conta pelo celular', t: 'a conta de luz que não espera', d: 'o corte é dia 20 e o salário é dia 30. dez dias de diferença que ninguém explica pra concessionária.' },
+  { antes: fotos.contasVertical, altA: 'contas, calculadora e caneta sobre a mesa', depois: fotos.maeComFilho, altD: 'mãe com o filho em casa', t: 'o remédio que acabou no meio do mês', d: 'não dá pra parcelar remédio na farmácia. e não dá pra esperar o mês virar.' },
+  { antes: fotos.cartaoECelular, altA: 'mãos segurando um cartão de crédito e um celular', depois: fotos.comercio, altD: 'pequeno comerciante no balcão da loja', t: 'a reposição que o caixa não cobre', d: 'quem vende precisa repor. às vezes a reposição chega antes do dinheiro da venda.' },
+];
+---
+
+<BaseLayout
+  title="Garanta Já — crédito com garantia no cartão, sem consulta ao SPC"
+  description="Crédito pequeno e rápido, garantido por um título de capitalização comprado no seu cartão. Sem consulta ao SPC. Simule antes de decidir."
+>
+
+  <!-- ── herói: o par, e a dobra já é o antes e o depois ───────────────── -->
+  <section class="heroi">
+    <div class="heroi-grade">
+      <div class="antes">
+        <div class="antes-inner">
+          <Chip tipo="destaque" class="selo-antes">antes</Chip>
+          <h1 class="t-display">a conta<br />vence sexta.</h1>
+          <p class="sub">a luz, o boleto, o remédio do mês. falta o dinheiro chegar antes.</p>
+        </div>
+      </div>
+
+      <div class="depois">
+        <img
+          class="retrato"
+          src={fotos.porta}
+          alt="mulher saindo de casa, aliviada, com o celular na mão"
+          width="768" height="1536"
+          fetchpriority="high" decoding="sync"
+        />
+        <div class="cartao">
+          <h2 class="cartao-titulo">e agora<br />ela está paga.</h2>
+          <Chip tipo="destaque" class="selo-spc">sem consulta ao spc</Chip>
+          <p class="escala">crédito pequeno, do tamanho da conta. a garantia é sua, então o score não entra na conta.</p>
+          <Botao href="/simulador" largura="cheia">simular agora</Botao>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── quem pode: a resposta é curta, e a brevidade é o argumento ────── -->
+  <section class="secao">
+    <div class="container quem-pode">
+      <h2 class="t-headline">tem cartão de crédito?<br />então dá pra começar.</h2>
+      <p class="t-lead suave">
+        o portão é esse. como é o seu cartão que compra a garantia, não existe um score
+        pra aprovar ou reprovar — existe um cartão que funciona ou não funciona.
+      </p>
+      <ul class="requisitos">
+        <li>
+          <Chip tipo="aprovado">exigência</Chip>
+          <span>ter 18 anos ou mais</span>
+        </li>
+        <li>
+          <Chip tipo="aprovado">exigência</Chip>
+          <span>ter um cartão de crédito no seu nome, com limite disponível</span>
+        </li>
+      </ul>
+      <p class="ressalva">
+        não prometemos aprovação garantida. a simulação mostra as condições reais antes
+        de você aceitar qualquer coisa.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── como funciona: a sequência carrega informação, então é numerada ─ -->
+  <section class="secao fundo-claro">
+    <div class="container">
+      <h2 class="t-headline titulo-secao">quatro passos, e o estranho explicado</h2>
+      <p class="t-lead suave intro">
+        a parte que soa esquisita é a do título de capitalização. é justamente ela
+        que faz o resto funcionar.
+      </p>
+
+      <ol class="passos">
+        {passos.map((p) => (
+          <li class="passo">
+            <span class="passo-n" aria-hidden="true">{p.n}</span>
+            <div>
+              <h3 class="t-title">{p.t}</h3>
+              <p class="t-body suave">{p.d}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <div class="passos-foto">
+        <Foto src={fotos.cartaoECelular} alt="mãos segurando um cartão de crédito ao lado de um celular" proporcao="1:1" />
+        <div class="passos-nota">
+          <h3 class="t-title">o título fica no seu nome</h3>
+          <p class="t-body suave">
+            ele não é uma taxa e não é uma venda casada disfarçada: é a garantia da
+            operação, e é o motivo de este crédito existir pra quem o banco recusa.
+          </p>
+          <Botao href="/como-funciona" variante="texto">ver a operação inteira</Botao>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── situações: três pares, tensão e resolução ──────────────────────── -->
+  <section class="secao">
+    <div class="container">
+      <h2 class="t-headline titulo-secao">três situações que a gente ouve toda semana</h2>
+
+      <div class="situacoes">
+        {situacoes.map((s, i) => (
+          <Par inverter={i % 2 === 1} class="situacao">
+            <div slot="antes" class="situacao-texto">
+              <h3 class="t-title">{s.t}</h3>
+              <p class="t-body suave">{s.d}</p>
+            </div>
+            <div slot="depois" class="situacao-fotos">
+              <Foto src={s.antes} alt={s.altA} proporcao={i === 1 ? '1:2' : (i === 2 ? '1:1' : '2:1')} class="f-antes" />
+              <Foto src={s.depois} alt={s.altD} proporcao={i === 1 ? '1:1' : (i === 2 ? '2:1' : '1:1')} class="f-depois" />
+            </div>
+          </Par>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── segurança: um bloco azul por viewport, e este é o da home ──────── -->
+  <section class="secao fundo-claro">
+    <div class="container seguranca">
+      <BlocoAzul titulo="por que isto não é golpe">
+        <p>
+          quem responde por esta operação é a <strong>{empresa.razaoSocial}</strong>,
+          cnpj <span class="tabular">{empresa.cnpj}</span>. o nome está no rodapé de
+          todas as páginas, e não em letra miúda.
+        </p>
+        <p>
+          a gente não pede depósito antecipado, não cobra taxa pra liberar,
+          e não manda ninguém pagar nada por fora pra “destravar” o crédito.
+          se alguém fizer isso em nome do Garanta Já, não é o Garanta Já.
+        </p>
+        <Botao slot="acao" href="/seguranca" variante="sobre-azul">ver canais oficiais</Botao>
+      </BlocoAzul>
+
+      <div class="conferindo">
+        <Foto src={fotos.conferindo} alt="homem lendo com calma um documento impresso na mesa da cozinha" proporcao="2:1" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── custo: o número aparece antes da decisão, não depois ───────────── -->
+  <section class="secao">
+    <div class="container custo">
+      <h2 class="t-headline titulo-secao">o custo aparece antes, não depois</h2>
+      <p class="t-lead suave intro">
+        na simulação você vê o valor, o custo efetivo total e as parcelas na mesma tela —
+        antes de assinar qualquer coisa.
+      </p>
+
+      <div class="exemplo" role="group" aria-label="exemplo de simulação">
+        <p class="exemplo-rotulo t-label suave">exemplo de simulação</p>
+        <p class="t-stat valor">{condicoes.valorExemplo}</p>
+        <dl class="exemplo-lista tabular">
+          <div><dt>custo efetivo total</dt><dd>{condicoes.cetMensal}</dd></div>
+          <div><dt>equivalente ao ano</dt><dd>{condicoes.cetAnual}</dd></div>
+        </dl>
+        <p class="exemplo-aviso">
+          números de demonstração, para visualização desta prévia. as condições reais
+          aparecem na sua simulação.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── fecho ──────────────────────────────────────────────────────────── -->
+  <section class="fecho">
+    <img class="fecho-foto" src={fotos.alivioLargo} alt="mulher relaxada na porta de casa, com o celular na mão" width="1536" height="768" loading="lazy" />
+    <div class="fecho-conteudo">
+      <div class="container">
+        <h2 class="t-headline">a conta continua vencendo sexta.</h2>
+        <p class="t-lead fecho-sub">leva menos tempo simular do que decidir.</p>
+        <Botao href="/simulador" variante="sobre-azul">simular agora</Botao>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* ── herói ─────────────────────────────────────────────────────────── */
+  .heroi-grade { display: grid; grid-template-columns: 1fr; }
+
+  .antes { background: var(--cinza-claro); }
+  .antes-inner {
+    padding: var(--s-lg) var(--gutter) var(--s-xl);
+    max-width: var(--container);
+    margin-inline: auto;
+  }
+  .selo-antes { margin-bottom: var(--s-md); }
+  .antes h1 { text-wrap: balance; }
+  .sub {
+    margin-top: var(--s-sm);
+    max-width: 32ch;
+    color: var(--cinza-medio);
+    font-size: var(--fs-base);
+    line-height: 1.5;
+  }
+
+  .depois { position: relative; min-height: calc(100svh - 116px - 52px - 210px); }
+  .retrato {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 34%;
+  }
+  .cartao {
+    position: relative;
+    margin: 0 var(--s-md) var(--s-md);
+    top: 0;
+    background: var(--branco);
+    border-radius: var(--r-lg);
+    padding: var(--s-lg) var(--s-lg) var(--s-md);
+  }
+  .depois { display: flex; align-items: flex-end; }
+  .cartao-titulo {
+    font-size: var(--fs-subhead);
+    font-weight: 800;
+    letter-spacing: -0.028em;
+    line-height: 1.06;
+    margin-bottom: var(--s-xs);
+    text-wrap: balance;
+  }
+  .selo-spc { margin-bottom: var(--s-sm); }
+  .escala {
+    font-size: var(--fs-body-sm);
+    line-height: 1.45;
+    color: var(--cinza-medio);
+    margin-bottom: var(--s-md);
+    max-width: 34ch;
+  }
+
+  @media (min-width: 1024px) {
+    .heroi-grade { grid-template-columns: 1fr 1fr; align-items: stretch; min-height: 72vh; }
+    .antes { display: flex; align-items: center; }
+    .antes-inner { padding: var(--s-4xl) var(--s-3xl) var(--s-4xl) var(--gutter); margin-inline: 0; margin-left: auto; max-width: 640px; }
+    .depois { min-height: 100%; }
+    .cartao { margin: 0 var(--s-2xl) var(--s-2xl); max-width: 460px; padding: var(--s-xl); }
+  }
+
+  /* ── quem pode ─────────────────────────────────────────────────────── */
+  .quem-pode h2 { text-wrap: balance; max-width: 18ch; }
+  .quem-pode .t-lead { margin-top: var(--s-lg); }
+  .requisitos {
+    margin-top: var(--s-xl);
+    display: grid;
+    gap: var(--s-md);
+    max-width: 46rem;
+  }
+  .requisitos li {
+    display: flex;
+    align-items: center;
+    gap: var(--s-md);
+    flex-wrap: wrap;
+    padding: var(--s-md) var(--s-lg);
+    background: var(--cinza-claro);
+    border-radius: var(--r-lg);
+    font-size: var(--fs-body);
+    font-weight: 500;
+  }
+  .ressalva {
+    margin-top: var(--s-lg);
+    font-size: var(--fs-body-sm);
+    color: var(--cinza-medio);
+    max-width: 58ch;
+  }
+
+  /* ── como funciona ─────────────────────────────────────────────────── */
+  .titulo-secao { text-wrap: balance; max-width: 22ch; }
+  .intro { margin-top: var(--s-md); }
+
+  .passos { margin-top: var(--s-2xl); display: grid; gap: var(--s-lg); }
+  .passo { display: flex; gap: var(--s-md); align-items: flex-start; }
+  .passo-n {
+    flex: none;
+    font-size: var(--fs-numeral);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--amarelo);
+    min-width: 1.4ch;
+    font-variant-numeric: tabular-nums;
+  }
+  .passo h3 { margin-bottom: var(--s-2xs); }
+
+  .passos-foto {
+    margin-top: var(--s-2xl);
+    display: grid;
+    gap: var(--s-xl);
+    align-items: center;
+  }
+  .passos-nota :global(.botao) { margin-top: var(--s-sm); }
+
+  @media (min-width: 768px) {
+    .passos { grid-template-columns: 1fr 1fr; gap: var(--s-xl) var(--s-2xl); }
+  }
+  @media (min-width: 1024px) {
+    .passos-foto { grid-template-columns: 1fr 1.2fr; gap: var(--s-3xl); }
+  }
+
+  /* ── situações ─────────────────────────────────────────────────────── */
+  .situacoes { margin-top: var(--s-2xl); display: grid; gap: var(--s-4xl); }
+  .situacao-texto h3 { margin-bottom: var(--s-sm); }
+  .situacao-fotos { display: grid; gap: var(--s-md); grid-template-columns: 1fr; }
+  @media (min-width: 640px) {
+    .situacao-fotos { grid-template-columns: 1fr 1fr; align-items: center; }
+  }
+
+  /* ── segurança ─────────────────────────────────────────────────────── */
+  .seguranca { display: grid; gap: var(--s-xl); }
+  @media (min-width: 1024px) {
+    .seguranca { grid-template-columns: 1.15fr 0.85fr; align-items: center; gap: var(--s-2xl); }
+  }
+
+  /* ── custo ─────────────────────────────────────────────────────────── */
+  .exemplo {
+    margin-top: var(--s-2xl);
+    background: var(--cinza-claro);
+    border-radius: var(--r-xl);
+    padding: clamp(24px, 5vw, 40px);
+    max-width: 44rem;
+  }
+  .exemplo-rotulo { margin-bottom: var(--s-xs); }
+  .valor { color: var(--cinza-escuro); }
+  .exemplo-lista {
+    margin-top: var(--s-lg);
+    display: grid;
+    gap: var(--s-sm);
+    border-top: 1px solid var(--linha);
+    padding-top: var(--s-lg);
+  }
+  .exemplo-lista > div { display: flex; justify-content: space-between; gap: var(--s-md); flex-wrap: wrap; }
+  .exemplo-lista dt { color: var(--cinza-medio); }
+  .exemplo-lista dd { margin: 0; font-weight: 600; }
+  .exemplo-aviso {
+    margin-top: var(--s-lg);
+    font-size: var(--fs-small);
+    line-height: 1.5;
+    color: var(--cinza-medio);
+    max-width: 52ch;
+  }
+
+  /* ── fecho ─────────────────────────────────────────────────────────── */
+  .fecho { position: relative; isolation: isolate; }
+  .fecho-foto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 42%;
+    z-index: -2;
+  }
+  .fecho::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to top, rgba(26, 34, 43, 0.88), rgba(26, 34, 43, 0.42));
+  }
+  .fecho-conteudo { padding-block: clamp(64px, 10vw, 140px); color: var(--branco); }
+  .fecho-conteudo h2 { text-wrap: balance; max-width: 20ch; }
+  .fecho-sub { margin: var(--s-md) 0 var(--s-xl); color: #DCE3EA; }
+</style>

@@ -1,0 +1,42 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  proporcao?: '2:1' | '1:1' | '1:2';
+  posicao?: string;
+  prioridade?: boolean;
+  class?: string;
+}
+const { src, alt, proporcao = '2:1', posicao = '50% 50%', prioridade = false, class: extra = '' } = Astro.props;
+const ratios: Record<string, string> = { '2:1': '2 / 1', '1:1': '1 / 1', '1:2': '1 / 2' };
+const dims: Record<string, [number, number]> = { '2:1': [1536, 768], '1:1': [1024, 1024], '1:2': [768, 1536] };
+const [w, h] = dims[proporcao];
+---
+
+<figure class:list={['foto', extra]} style={`--ratio:${ratios[proporcao]}`}>
+  <img
+    src={src}
+    alt={alt}
+    width={w}
+    height={h}
+    style={`object-position:${posicao}`}
+    loading={prioridade ? 'eager' : 'lazy'}
+    fetchpriority={prioridade ? 'high' : 'auto'}
+    decoding={prioridade ? 'sync' : 'async'}
+  />
+</figure>
+
+<style>
+  .foto {
+    margin: 0;
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    background: var(--cinza-claro);
+  }
+  .foto img {
+    width: 100%;
+    aspect-ratio: var(--ratio);
+    object-fit: cover;
+    display: block;
+  }
+</style>

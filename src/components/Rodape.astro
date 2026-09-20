@@ -1,0 +1,124 @@
+---
+import { empresa, contato, aindaNaoTemos } from '../data/preview';
+
+const site = [
+  { href: '/como-funciona', label: 'como funciona' },
+  { href: '/simulador', label: 'simulador' },
+  { href: '/seguranca', label: 'segurança e confiança' },
+  { href: '/faq', label: 'dúvidas' },
+  { href: '/blog', label: 'conteúdos' },
+  { href: '/acompanhar', label: 'acompanhar operação' },
+];
+const legal = [
+  { href: '/politicas', label: 'políticas' },
+  { href: '/politicas#privacidade', label: 'privacidade' },
+  { href: '/politicas#cookies', label: 'cookies' },
+];
+const ano = new Date().getFullYear();
+---
+
+<footer class="rodape">
+  <div class="container">
+    <div class="grade">
+      <div class="col marca-col">
+        <img src="/img/logo-branco.svg" alt="Garanta Já" width="200" height="30" class="marca" />
+        <p class="descritivo">crédito imediato, simples e possível, para quem precisa resolver agora.</p>
+        <a href={contato.whatsappLink} class="whats">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.2 1.2-1.7 1.2-.5.1-1 .1-1.6-.1a12 12 0 0 1-6.4-5.6c-.5-.8-.8-1.7-.8-2.5 0-.9.5-1.4.8-1.6.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2 0 .4-.1.5l-.4.5c-.1.2-.3.3-.1.6.5.9 1.2 1.6 2.1 2.1.2.1.4.1.5 0l.6-.7c.2-.2.3-.2.5-.1l1.8.9c.3.1.4.2.4.4 0 .1 0 .7-.2 1.3Z"/>
+          </svg>
+          {contato.whatsappExibicao}
+        </a>
+        <a href={`mailto:${contato.email}`} class="email">{contato.email}</a>
+      </div>
+
+      <div class="col">
+        <h2 class="titulo-col">o site</h2>
+        <ul>{site.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+      </div>
+
+      <div class="col">
+        <h2 class="titulo-col">legal</h2>
+        <ul>{legal.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+      </div>
+
+      <div class="col endosso">
+        <h2 class="titulo-col">quem responde</h2>
+        <p class="razao">{empresa.razaoSocial}</p>
+        <p class="cnpj tabular">cnpj {empresa.cnpj}</p>
+        <p class="pendente">
+          registro susep do título de capitalização e identificação do emissor:
+          a publicar antes do lançamento.
+        </p>
+      </div>
+    </div>
+
+    <div class="base">
+      <p>© {ano} {empresa.nomeFantasia}. garanta já é um produto {empresa.nomeFantasia}.</p>
+      <p class="aviso">
+        crédito sujeito a análise. o título de capitalização é adquirido no cartão de crédito
+        e constitui a garantia da operação. condições, custo efetivo total e prazos são
+        apresentados na simulação, antes de qualquer contratação.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .rodape {
+    background: var(--cinza-escuro);
+    color: var(--branco);
+    padding-block: clamp(48px, 7vw, 88px) var(--s-xl);
+  }
+  .grade {
+    display: grid;
+    gap: var(--s-2xl);
+    grid-template-columns: 1fr;
+  }
+  .marca { width: 200px; height: auto; margin-bottom: var(--s-md); }
+  .descritivo { color: var(--escuro-texto); max-width: 34ch; margin-bottom: var(--s-lg); }
+  .whats, .email {
+    display: inline-flex; align-items: center; gap: var(--s-xs);
+    color: var(--branco); text-decoration: none; font-weight: 500;
+    min-height: 44px;
+  }
+  .whats:hover, .email:hover { color: var(--amarelo); }
+  .email { font-weight: 400; color: var(--escuro-texto); }
+
+  .titulo-col {
+    font-size: var(--fs-small); font-weight: 600; letter-spacing: 0.06em;
+    color: var(--amarelo); margin-bottom: var(--s-md);
+  }
+  .col ul { display: flex; flex-direction: column; }
+  .col li a {
+    display: flex; align-items: center; min-height: 40px;
+    color: var(--escuro-texto); text-decoration: none;
+  }
+  .col li a:hover { color: var(--branco); }
+
+  .razao { font-weight: 500; }
+  .cnpj { color: var(--escuro-texto); margin-top: var(--s-2xs); }
+  .pendente { color: var(--escuro-suave); font-size: var(--fs-small); line-height: 1.5; margin-top: var(--s-md); max-width: 36ch; }
+
+  .base {
+    margin-top: var(--s-2xl);
+    padding-top: var(--s-lg);
+    border-top: 1px solid var(--escuro-linha);
+    display: grid;
+    gap: var(--s-sm);
+    color: var(--escuro-suave);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+  }
+  .aviso { max-width: 78ch; }
+
+  @media (min-width: 768px) {
+    .grade { grid-template-columns: 1.4fr 1fr 1fr; }
+    .endosso { grid-column: 1 / -1; padding-top: var(--s-lg); border-top: 1px solid var(--escuro-linha); }
+    .pendente { max-width: 60ch; }
+  }
+  @media (min-width: 1024px) {
+    .grade { grid-template-columns: 1.5fr 1fr 1fr 1.3fr; }
+    .endosso { grid-column: auto; padding-top: 0; border-top: 0; }
+  }
+</style>
