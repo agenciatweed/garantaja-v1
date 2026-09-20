@@ -378,20 +378,20 @@ const situacoes = [
      suporte, sem JS ou com movimento reduzido a seção fica exatamente como
      está hoje — nada some. Roda no compositor, custo zero de banda. */
   @keyframes par-tensao {
-    from { clip-path: inset(0 0 26% 0 round var(--r-xl)); transform: translateY(20px); }
+    from { clip-path: inset(0 0 92% 0 round var(--r-xl)); transform: translateY(78px); }
     to   { clip-path: inset(0 0 0 0 round var(--r-xl)); transform: translateY(0); }
   }
   @keyframes par-resolucao {
-    from { clip-path: inset(0 0 30% 0 round var(--r-xl)); transform: translateY(26px) scale(1.018); }
+    from { clip-path: inset(0 0 96% 0 round var(--r-xl)); transform: translateY(124px) scale(1.07); }
     to   { clip-path: inset(0 0 0 0 round var(--r-xl)); transform: translateY(0) scale(1); }
   }
   /* o par espelhado resolve pelo outro lado, para o ritmo não virar loop */
   @keyframes par-tensao-alt {
-    from { clip-path: inset(26% 0 0 0 round var(--r-xl)); transform: translateY(-20px); }
+    from { clip-path: inset(92% 0 0 0 round var(--r-xl)); transform: translateY(-78px); }
     to   { clip-path: inset(0 0 0 0 round var(--r-xl)); transform: translateY(0); }
   }
   @keyframes par-resolucao-alt {
-    from { clip-path: inset(30% 0 0 0 round var(--r-xl)); transform: translateY(-26px) scale(1.018); }
+    from { clip-path: inset(96% 0 0 0 round var(--r-xl)); transform: translateY(-124px) scale(1.07); }
     to   { clip-path: inset(0 0 0 0 round var(--r-xl)); transform: translateY(0) scale(1); }
   }
 
@@ -402,15 +402,15 @@ const situacoes = [
         animation-timeline: view();
         animation-duration: auto;   /* sem isto a duração é 0s e o scroll não conduz */
         animation-fill-mode: both;
-        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
       }
       .situacao-fotos :global(.f-antes) {
         animation-name: par-tensao;
-        animation-range: entry 5% entry 80%;
+        animation-range: entry 12% entry 62%;
       }
       .situacao-fotos :global(.f-depois) {
         animation-name: par-resolucao;
-        animation-range: entry 25% entry 100%;
+        animation-range: entry 34% entry 92%;
       }
       :global(.par.inverter) .situacao-fotos :global(.f-antes) { animation-name: par-tensao-alt; }
       :global(.par.inverter) .situacao-fotos :global(.f-depois) { animation-name: par-resolucao-alt; }
