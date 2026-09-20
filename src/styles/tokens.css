@@ -51,7 +51,6 @@
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --container: 1280px;
-  --altura-aviso: 52px;
   --gutter: var(--s-lg);
 
   /* degraus de texto pequeno — abaixo do corpo */

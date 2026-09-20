@@ -48,31 +48,5 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     <slot />
   </main>
   <Rodape />
-  {PREVIEW_MODE && (
-    <div class="aviso-previa" role="note">
-      <strong>prévia</strong> · valores, taxas e contatos nesta página são fictícios e servem só para visualização
-    </div>
-  )}
-  <style>
-    body { padding-bottom: var(--altura-aviso); }
-    .aviso-previa {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 40;
-      background: var(--cinza-escuro);
-      color: var(--branco);
-      font-size: var(--fs-micro);
-      line-height: 1.4;
-      text-align: center;
-      padding: var(--s-sm) var(--s-md);
-      min-height: var(--altura-aviso);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .aviso-previa strong { color: var(--amarelo); font-weight: 600; }
-  </style>
 </body>
 </html>
