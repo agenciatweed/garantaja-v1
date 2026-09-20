@@ -23,12 +23,21 @@ const ano = new Date().getFullYear();
       <div class="col marca-col">
         <img src="/img/logo-branco.svg" alt="Garanta Já" width="200" height="30" class="marca" />
         <p class="descritivo">crédito imediato, simples e possível, para quem precisa resolver agora.</p>
-        <a href={contato.whatsappLink} class="whats">
+        {contato.whatsappLink ? (
+          <a href={contato.whatsappLink} class="whats">
           <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.2 1.2-1.7 1.2-.5.1-1 .1-1.6-.1a12 12 0 0 1-6.4-5.6c-.5-.8-.8-1.7-.8-2.5 0-.9.5-1.4.8-1.6.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2 0 .4-.1.5l-.4.5c-.1.2-.3.3-.1.6.5.9 1.2 1.6 2.1 2.1.2.1.4.1.5 0l.6-.7c.2-.2.3-.2.5-.1l1.8.9c.3.1.4.2.4.4 0 .1 0 .7-.2 1.3Z"/>
           </svg>
           {contato.whatsappExibicao}
         </a>
+        ) : (
+          <span class="whats sem-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.2 1.2-1.7 1.2-.5.1-1 .1-1.6-.1a12 12 0 0 1-6.4-5.6c-.5-.8-.8-1.7-.8-2.5 0-.9.5-1.4.8-1.6.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2 0 .4-.1.5l-.4.5c-.1.2-.3.3-.1.6.5.9 1.2 1.6 2.1 2.1.2.1.4.1.5 0l.6-.7c.2-.2.3-.2.5-.1l1.8.9c.3.1.4.2.4.4 0 .1 0 .7-.2 1.3Z"/>
+          </svg>
+          {contato.whatsappExibicao}
+        </span>
+        )}
         <a href={`mailto:${contato.email}`} class="email">{contato.email}</a>
       </div>
 
@@ -83,6 +92,8 @@ const ano = new Date().getFullYear();
     min-height: 44px;
   }
   .whats:hover, .email:hover { color: var(--amarelo); }
+  .sem-link { cursor: default; }
+  .sem-link:hover { color: var(--branco); }
   .email { font-weight: 400; color: var(--escuro-texto); }
 
   .titulo-col {

@@ -179,7 +179,7 @@ The site will be shown to the client as a **semi-complete preview** before the r
 | CET yearly | `20,98% a.a.` | Derived, not invented: (1,016)¹² − 1 = 20,9830%. Recompute whenever the monthly rate changes. |
 | Domain | `garantajacred.com.br` | Provisional. Ownership of `garantaja.com.br` is unverified; the real domain may differ. |
 | E-mail | `contato@garantajacred.com.br` | Provisional, follows the domain. |
-| WhatsApp | `(51) 99110-0337` → `wa.me/5551991100337` | **A real personal number belonging to one of the owners**, standing in until an official line exists. |
+| WhatsApp | *nenhum — exibe "número a definir"* | **Removido antes da publicação** (2026-09-20, decisão do cliente). O número pessoal de um sócio não vai para uma página pública. Preencha `whatsappLink` e `whatsappExibicao` em `src/data/preview.ts` quando a linha oficial existir; a interface volta a renderizar o link sozinha. |
 
 **Build requirements that make this safe and reversible:**
 
@@ -188,9 +188,7 @@ The site will be shown to the client as a **semi-complete preview** before the r
 3. While any of them is still synthetic, the site ships `<meta name="robots" content="noindex, nofollow">`. A preview that gets indexed becomes a published credit offer with invented terms.
 4. The real figures, once supplied, arrive **together with their mandatory cost disclosures** — a Brazilian credit offer cannot legally show an amount and a rate without them.
 
-One open point the client has already acknowledged:
-
-- Publishing an owner's **personal** number on a public page exposes it permanently to scrapers. Fine for a link-shared preview; worth replacing before launch.
+Resolvido: o número pessoal foi retirado antes de qualquer publicação, a pedido do cliente. A interface trata `whatsappLink: null` renderizando texto em vez de link, então nada aponta para lugar nenhum.
 
 ### Terminology
 

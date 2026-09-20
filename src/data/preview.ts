@@ -23,10 +23,13 @@ export const empresa = {
   sintetico: false,
 };
 
-/** SINTÉTICO — número pessoal de um dos sócios, até existir linha oficial. */
+/** SINTÉTICO — sem número ainda. O número pessoal de um sócio foi retirado
+ * antes da publicação para não expor um telefone particular numa página pública.
+ * Quando existir linha oficial, preencha whatsappLink e whatsappExibicao.
+ */
 export const contato = {
-  whatsappExibicao: '(51) 99110-0337',
-  whatsappLink: 'https://wa.me/5551991100337',
+  whatsappExibicao: 'número a definir',
+  whatsappLink: null as string | null,
   email: 'contato@garantajacred.com.br',
   dominio: 'garantajacred.com.br',
   sintetico: true,

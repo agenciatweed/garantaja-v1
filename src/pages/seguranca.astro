@@ -82,7 +82,7 @@ const nunca = [
           de outro número, outro domínio ou outro perfil não é oficial.
         </p>
         <ul class="canais">
-          <li><span class="canal-rotulo">whatsapp</span> <a href={contato.whatsappLink}>{contato.whatsappExibicao}</a></li>
+          <li><span class="canal-rotulo">whatsapp</span> <span class="pendente-inline">{contato.whatsappExibicao}</span></li>
           <li><span class="canal-rotulo">e-mail</span> <a href={`mailto:${contato.email}`}>{contato.email}</a></li>
           <li><span class="canal-rotulo">site</span> <span class="tabular">{contato.dominio}</span></li>
         </ul>
@@ -151,6 +151,7 @@ const nunca = [
   }
   .canais a { color: var(--branco); font-weight: 600; text-decoration-color: rgba(255,255,255,0.45); }
   .canais a:hover { color: var(--amarelo); }
+  .pendente-inline { color: #C9D6E6; font-weight: 500; }
   .provisorio {
     margin-top: var(--s-lg);
     display: flex; gap: var(--s-sm); align-items: center; flex-wrap: wrap;
