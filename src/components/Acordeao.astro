@@ -1,0 +1,54 @@
+---
+import type { Pergunta } from '../data/faq';
+
+interface Props {
+  itens: Pergunta[];
+}
+const { itens } = Astro.props;
+---
+
+<div class="acordeao">
+  {itens.map((i) => (
+    <details class="item">
+      <summary>
+        <span>{i.p}</span>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+      </summary>
+      <p class="resposta">{i.r}</p>
+    </details>
+  ))}
+</div>
+
+<style>
+  .acordeao { display: flex; flex-direction: column; gap: var(--s-sm); }
+  .item {
+    border: 1px solid var(--linha);
+    border-radius: var(--r-lg);
+    background: var(--branco);
+    transition: border-color 140ms ease-out;
+  }
+  .item[open] { border-color: var(--azul); }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s-md);
+    padding: 20px;
+    min-height: 60px;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 600;
+    font-size: 1.0625rem;
+    line-height: 1.35;
+    color: var(--azul);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary svg { flex: none; color: var(--azul); transition: transform 160ms ease-out; }
+  .item[open] summary svg { transform: rotate(180deg); }
+  .resposta {
+    padding: 0 20px 20px;
+    font-size: var(--fs-body);
+    line-height: 1.6;
+    max-width: 66ch;
+  }
+</style>

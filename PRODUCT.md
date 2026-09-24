@@ -2,6 +2,20 @@
 
 <!-- impeccable:product-schema 1 -->
 
+> ## Atualização 2026-09-24 — briefing da agência e ajustes do cliente
+>
+> O cliente enviou o *Briefing de Criação do Site Garanta Já* (agência de marketing), um protótipo da agência e um PPT de ajustes. Pontos que **substituem** o que está abaixo quando houver conflito:
+>
+> - **Layout:** segue o protótipo da agência (ver `DESIGN.md` › Direção v2). O site vira porta de entrada de Google Ads e Meta Ads; lógica "primeiro esclarecer, depois converter".
+> - **Arquitetura:** `/`, `/como-funciona`, `/duvidas` (antigo `/faq`, com redirect), `/seguranca`, `/atendimento`, `/termos`, `/privacidade` (antigo `/politicas` → `/termos`), `/simulador`, `/acompanhar`, `/blog` ("conteúdos", mantido no menu a pedido do cliente).
+> - **Faixa de valores da prévia:** R$ 300 a R$ 1.500, parcelas 6/10/12/18x, CET de exemplo 4,2% a.m. (63,84% a.a.) — valores do protótipo aprovado; continuam sintéticos, em `src/data/preview.ts`. "Até R$ 1.500" aparece no herói (o briefing lista como claim potencial).
+> - **Taxa única:** a taxa é a mesma para qualquer perfil; varia apenas conforme o valor (confirmado pelo cliente).
+> - **Cobrança antes + estorno:** a compra do título no cartão acontece antes da liberação porque é a garantia; se a operação não for concluída, a compra é estornada (confirmado pelo cliente).
+> - **Sorteios:** o título participa de sorteios (confirmado). Regras, datas e prêmios ainda não informados.
+> - **Participantes:** CAPSEG (com logo), Aplicap e UY3 — **dependem de aprovação da assessoria jurídica**. Funções descritas de forma provisória; logos ainda não recebidos. Bloco fica discreto, no fim da home.
+> - **Claims a evitar (briefing):** "100% aprovado", "aprovação para todos", "dinheiro fácil", "negativado aprovado", "sem análise", "sem risco", "sem garantia"; "empréstimo com cartão" não lidera headline; "regulado"/"seguro" só após homologação jurídica.
+> - **Pendentes do briefing, não implementados nesta rodada:** GTM/GA4/Google Ads/Meta Pixel e eventos, consentimento de cookies, passagem de UTMs para o simulador, CMS.
+
 ## Platform
 
 web

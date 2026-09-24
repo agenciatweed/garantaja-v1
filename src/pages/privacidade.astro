@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { empresa, contato } from '../data/preview';
+
+const secoes = [
+  { id: 'dados', t: 'quais dados coletamos', d: 'os dados que você informa na simulação e na contratação, e para que cada um é usado — validar sua identidade e formalizar a operação.' },
+  { id: 'lgpd', t: 'seus direitos pela LGPD', d: 'como acessar, corrigir, portar ou pedir a exclusão dos seus dados, e como falar com o encarregado de dados (DPO).' },
+  { id: 'compartilhamento', t: 'com quem os dados são compartilhados', d: 'quais empresas participantes da operação recebem dados, e para qual finalidade.' },
+  { id: 'cookies', t: 'cookies', d: 'quais cookies o site usa, para quê, e como recusar os não essenciais.' },
+];
+---
+
+<BaseLayout
+  title="Política de privacidade — Garanta Já"
+  description="Como o Garanta Já trata os seus dados, seus direitos pela LGPD e o uso de cookies."
+>
+  <div class="pagina">
+    <a href="/" class="voltar">← início</a>
+    <h1 class="t-pagina">política de privacidade.</h1>
+    <p class="intro">
+      o texto definitivo está em elaboração jurídica. aqui está o que ele vai cobrir e
+      quem responde pelos seus dados.
+    </p>
+
+    <div class="lista">
+      {secoes.map((s) => (
+        <section class="bloco" id={s.id}>
+          <h2>{s.t}</h2>
+          <p>{s.d}</p>
+          <p class="estado">em elaboração jurídica · publicado antes do lançamento</p>
+        </section>
+      ))}
+    </div>
+
+    <dl class="responsavel tabular">
+      <div><dt>controlador</dt><dd>{empresa.razaoSocial}</dd></div>
+      <div><dt>cnpj</dt><dd>{empresa.cnpj}</dd></div>
+      <div><dt>contato</dt><dd><a href={`mailto:${contato.email}`}>{contato.email}</a></dd></div>
+      <div><dt>encarregado (DPO)</dt><dd>a identificar</dd></div>
+    </dl>
+  </div>
+</BaseLayout>
+
+<style>
+  .lista { display: grid; gap: var(--s-lg); }
+  .bloco { border-top: 1px solid var(--linha); padding-top: var(--s-lg); }
+  .bloco h2 { font-size: 1.1875rem; font-weight: 700; margin-bottom: var(--s-xs); }
+  .bloco p { max-width: 62ch; }
+  .estado { margin-top: var(--s-xs); font-size: var(--fs-small); font-weight: 600; color: var(--azul); }
+  .responsavel {
+    margin-top: var(--s-2xl);
+    background: var(--cinza-claro);
+    border-radius: var(--r-xl);
+    padding: 26px;
+    display: grid;
+    gap: var(--s-xs);
+  }
+  .responsavel > div { display: flex; justify-content: space-between; gap: var(--s-md); flex-wrap: wrap; }
+  .responsavel dt { color: var(--cinza-medio); }
+  .responsavel dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+</style>

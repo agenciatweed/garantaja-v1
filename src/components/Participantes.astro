@@ -1,0 +1,37 @@
+---
+import { participantes, participantesAprovados } from '../data/preview';
+---
+
+<ul class="participantes">
+  <li class="card marca">
+    <img src="/img/logo.svg" alt="Garanta Já" width="150" height="23" />
+    <p>a marca da experiência: site, simulação, acompanhamento e atendimento.</p>
+  </li>
+  {participantes.map((p) => (
+    <li class="card">
+      <p class="nome">{p.nome}</p>
+      <p>{p.funcao}</p>
+    </li>
+  ))}
+</ul>
+{!participantesAprovados && (
+  <p class="pendente">nomes, logos e funções sujeitos a aprovação da assessoria jurídica antes do lançamento.</p>
+)}
+
+<style>
+  .participantes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: var(--s-md);
+  }
+  .card {
+    border: 1px solid var(--linha);
+    border-radius: var(--r-xl);
+    padding: 22px;
+    background: var(--branco);
+  }
+  .card p { font-size: var(--fs-body-sm); line-height: 1.5; }
+  .marca img { height: 22px; width: auto; margin-bottom: 12px; }
+  .nome { font-size: 1.125rem !important; font-weight: 800; color: var(--azul); margin-bottom: 8px; line-height: 1.2 !important; }
+  .pendente { margin-top: var(--s-md); font-size: var(--fs-small); color: var(--cinza-medio); }
+</style>

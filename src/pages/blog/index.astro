@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Botao from '../../components/Botao.astro';
+import ChamadaSimular from '../../components/ChamadaSimular.astro';
 
 const posts = (await getCollection('blog')).sort(
   (a, b) => b.data.data.valueOf() - a.data.data.valueOf()
@@ -16,18 +16,17 @@ const dataBR = (d: Date) =>
   title="Conteúdos — Garanta Já"
   description="Textos diretos sobre contas do mês, crédito e como as operações funcionam de verdade."
 >
-  <section class="secao-curta capa">
-    <div class="container">
-      <h1 class="t-display">conteúdos.</h1>
-      <p class="t-lead sub">
-        o que a gente explicaria se você perguntasse pessoalmente. sem
-        juridiquês e sem enrolação.
-      </p>
-    </div>
+  <section class="container capa">
+    <a href="/" class="voltar">← início</a>
+    <h1 class="t-pagina">conteúdos.</h1>
+    <p class="t-lead sub">
+      o que a gente explicaria se você perguntasse pessoalmente. sem
+      juridiquês e sem enrolação.
+    </p>
   </section>
 
   {destaque && (
-    <section class="secao-curta">
+    <section class="bloco">
       <div class="container">
         <a href={`/blog/${destaque.id}`} class="destaque">
           <div class="destaque-foto">
@@ -35,7 +34,7 @@ const dataBR = (d: Date) =>
           </div>
           <div class="destaque-texto">
             <p class="meta tabular">{destaque.data.categoria} · {destaque.data.leitura}</p>
-            <h2 class="t-headline">{destaque.data.titulo}</h2>
+            <h2 class="t-secao">{destaque.data.titulo}</h2>
             <p class="t-body suave">{destaque.data.resumo}</p>
             <span class="ler">ler agora</span>
           </div>
@@ -45,7 +44,7 @@ const dataBR = (d: Date) =>
   )}
 
   {resto.length > 0 && (
-    <section class="secao-curta">
+    <section class="bloco">
       <div class="container">
         <ul class="grade">
           {resto.map((p) => (
@@ -54,7 +53,7 @@ const dataBR = (d: Date) =>
                 <img src={p.data.imagem} alt={p.data.imagemAlt} width="1024" height="1024" loading="lazy" />
                 <div class="cartao-corpo">
                   <p class="meta tabular">{p.data.categoria} · {p.data.leitura}</p>
-                  <h3 class="t-title">{p.data.titulo}</h3>
+                  <h3 class="t-card">{p.data.titulo}</h3>
                   <p class="t-body suave resumo">{p.data.resumo}</p>
                 </div>
               </a>
@@ -65,17 +64,16 @@ const dataBR = (d: Date) =>
     </section>
   )}
 
-  <section class="secao fundo-claro">
-    <div class="container fecho">
-      <h2 class="t-headline">já sabe o que precisa resolver?</h2>
-      <Botao href="/simulador">simular agora</Botao>
-    </div>
+  <section class="container secao">
+    <ChamadaSimular destaque="já sabe o que precisa resolver?" titulo="veja quanto você pode receber." />
   </section>
 </BaseLayout>
 
 <style>
-  .capa h1 { text-wrap: balance; }
-  .capa .sub { margin-top: var(--s-md); color: var(--cinza-medio); }
+  .capa { padding-top: 36px; padding-bottom: var(--s-xl); }
+  .capa h1 { margin: 10px 0 12px; }
+  .capa .sub { color: var(--cinza-medio); }
+  .bloco { padding-bottom: var(--s-2xl); }
 
   .meta {
     font-size: var(--fs-micro);
@@ -92,7 +90,7 @@ const dataBR = (d: Date) =>
     color: inherit;
     align-items: center;
   }
-  .destaque-foto { border-radius: var(--r-xl); overflow: hidden; background: var(--cinza-claro); }
+  .destaque-foto { border-radius: var(--r-2xl); overflow: hidden; background: var(--cinza-claro); }
   .destaque-foto img { width: 100%; aspect-ratio: 2 / 1; object-fit: cover; transition: transform 400ms var(--ease); }
   .destaque:hover .destaque-foto img { transform: scale(1.02); }
   .destaque h2 { text-wrap: balance; margin-bottom: var(--s-sm); }
@@ -125,7 +123,6 @@ const dataBR = (d: Date) =>
   .cartao h3 { margin-bottom: var(--s-xs); }
   .resumo { font-size: var(--fs-base); }
 
-  .fecho h2 { text-wrap: balance; margin-bottom: var(--s-xl); }
 
   @media (min-width: 768px) {
     .grade { grid-template-columns: 1fr 1fr; gap: var(--s-2xl); }

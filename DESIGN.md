@@ -3,26 +3,24 @@ name: Garanta Já
 description: Crédito imediato, simples e possível — para quem precisa resolver agora.
 colors:
   amarelo-garanta: "#FFC400"
-  amarelo-suave: "#FFF3CC"
+  amarelo-suave: "#FFF6D6"
   azul-garanta: "#0E5AA7"
-  azul-profundo: "#0A447E"
-  azul-suave: "#EAF1F9"
+  azul-profundo: "#0A4783"
+  azul-suave: "#E7F0F9"
   verde-garanta: "#00B36B"
   verde-acao: "#00874F"
   verde-acao-profundo: "#006C3F"
-  verde-suave: "#E5F7EF"
+  verde-suave: "#E0F5EC"
   cinza-claro: "#F2F4F6"
   cinza-medio: "#585D69"
   cinza-escuro: "#1A222B"
   branco: "#FFFFFF"
-  linha: "#DFE4EA"
+  linha: "#E1E5EA"
   linha-forte: "#7A828F"
   erro: "#C0392B"
   amarelo-pressionado: "#E6B000"
-  escuro-texto: "#B9BFC8"
-  escuro-suave: "#8C94A0"
-  escuro-linha: "#333B45"
-  azul-texto: "#C9D6E6"
+  escuro-texto: "#C7CDD4"
+  escuro-suave: "#98A1AD"
 typography:
   display:
     fontFamily: "Poppins, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
@@ -99,8 +97,9 @@ typography:
 rounded:
   sm: "8px"
   md: "12px"
-  lg: "20px"
-  xl: "28px"
+  lg: "16px"
+  xl: "20px"
+  2xl: "28px"
   pill: "999px"
 spacing:
   2xs: "4px"
@@ -204,6 +203,23 @@ components:
 <!-- SEED: established with the user before implementation, from a binding brand manual (Identidade de Marca — Garanta Já) and a confirmed layout reference. The tokens above are real and normative — they come from the manual, not from a workshop guess. The Components section specifies primitives that do not exist in code yet. Re-run /impeccable document once there's an implementation, to capture the actual built system and generate the .impeccable/design.json sidecar. -->
 
 # Design System: Garanta Já
+
+> ## ⚠️ Direção v2 — modelo da agência (2026-09-24)
+>
+> Em 2026-09-24 o cliente enviou o briefing da agência de marketing (*Briefing de Criação do Site Garanta Já*), um protótipo de baixa fidelidade da agência e um PPT de ajustes. A decisão do cliente: **o layout segue o protótipo da agência**, com partes do nosso modelo que eles preferiram (FAQ original, menu "conteúdos", passos com o título de capitalização). Onde esta seção conflitar com o resto do documento, **esta seção vale**. O resto (cores, tipografia, Regra do Caixa Baixa, acessibilidade, fotografia real) continua valendo.
+>
+> **O que mudou:**
+>
+> - **Tese.** Sai o díptico "antes e depois" e a animação scroll-driven da home. Entra uma página de cards e blocos curtos, seguindo a jornada do briefing: situação → elegibilidade → benefício → como funciona → condições → confiança → simulação.
+> - **Sequência da home:** herói (texto + foto 4:3 com card flutuante "até R$ 1.500") → situações de uso (3 cards) → como funciona (5 cards numerados) → chamada azul para simular (com o G amarelo, `public/img/simbolo-g.svg`) → por que o garanta já (5 cards, o 5º "sorteios" em amarelo-suave) → transparência (texto + card "resumo da operação" com CET destacado e o aviso "mesma taxa para qualquer perfil") → bandeiras aceitas → dúvidas mais comuns (6, acordeão) → bloco escuro de atendimento → quem participa (discreto, no fim) → barra fixa de CTA no rodapé da tela (só na home).
+> - **Páginas internas** usam o cabeçalho `.pagina` (← início, H1 `t-pagina`, intro) numa coluna de 860px.
+> - **Navegação:** sem faixa de topo. Logo à esquerda, links em pílula (atual com fundo `azul-suave`), CTA "simular" verde. Menu: como funciona · dúvidas · segurança · atendimento · conteúdos.
+> - **Container** 1160px. **Tipografia:** herói `clamp(34px, 5.4vw, 60px)` 800; título de seção `clamp(26px, 3.4vw, 40px)` 800; título de card 18–19px 700. Títulos em azul.
+> - **Profundidade:** cards brancos têm borda `linha` **e** sombra suave em repouso (`--sombra-card`); card de destaque usa `--sombra-elevada`. Isto substitui a Regra "Flat-At-Rest".
+> - **Botão sobre azul/escuro** continua amarelo com texto azul. **CTA primário continua `verde-acao` (#00874F)** — a agência usa #00B36B com texto branco, que falha AA (2,7:1); mantivemos o verde acessível.
+> - **Cinzas** continuam os confirmados pelo cliente (#585D69 / #1A222B), não os da agência (#6B7280 / #1F2933).
+> - **Mascote** saiu da home (fica no 404). **Tokens** reais em `src/styles/tokens.css`.
+
 
 ## Overview
 

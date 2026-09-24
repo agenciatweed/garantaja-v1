@@ -1,0 +1,37 @@
+---
+import { bandeiras } from '../data/preview';
+---
+
+<div class="bandeiras">
+  <div>
+    <h3 class="titulo">use o cartão que você já tem.</h3>
+    <p class="nota">bandeiras aceitas sujeitas a homologação.</p>
+  </div>
+  <ul class="lista" aria-label="bandeiras aceitas">
+    {bandeiras.map((b) => <li>{b}</li>)}
+  </ul>
+</div>
+
+<style>
+  .bandeiras {
+    background: var(--azul-suave);
+    border-radius: var(--r-2xl);
+    padding: var(--s-xl);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--s-lg);
+    align-items: center;
+  }
+  .titulo { font-size: 1.5rem; font-weight: 700; margin-bottom: var(--s-xs); }
+  .nota { font-size: var(--fs-body-sm); }
+  .lista { display: flex; gap: 10px; flex-wrap: wrap; }
+  .lista li {
+    background: var(--branco);
+    border: 1px solid var(--linha);
+    border-radius: var(--r-md);
+    padding: 12px 18px;
+    font-weight: 700;
+    font-size: var(--fs-small);
+    color: var(--cinza-medio);
+  }
+</style>

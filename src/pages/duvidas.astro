@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Acordeao from '../components/Acordeao.astro';
+import BlocoAtendimento from '../components/BlocoAtendimento.astro';
+import { faq } from '../data/faq';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.flatMap((g) => g.itens).map((i) => ({
+    '@type': 'Question',
+    name: i.p,
+    acceptedAnswer: { '@type': 'Answer', text: i.r },
+  })),
+};
+---
+
+<BaseLayout
+  title="Dúvidas — Garanta Já"
+  description="As perguntas reais de quem chega desconfiado: é golpe, por que não consultam score, quanto custa, o que é o título de capitalização."
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <div class="pagina">
+    <a href="/" class="voltar">← início</a>
+    <h1 class="t-pagina">dúvidas.</h1>
+    <p class="intro">
+      estas são as perguntas que a gente ouve, começando pela mais desconfortável.
+      se não encontrar a sua, fale com o atendimento.
+    </p>
+
+    <div class="grupos">
+      {faq.map((g) => (
+        <section class="grupo">
+          <h2>{g.nome}</h2>
+          <Acordeao itens={g.itens} />
+        </section>
+      ))}
+    </div>
+  </div>
+
+  <section class="container fecho">
+    <BlocoAtendimento />
+  </section>
+</BaseLayout>
+
+<style>
+  .grupos { display: grid; gap: var(--s-2xl); }
+  .grupo h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: var(--s-md); }
+  .fecho { padding-bottom: clamp(44px, 6vw, 80px); }
+</style>

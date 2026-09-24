@@ -1,499 +1,440 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Botao from '../components/Botao.astro';
-import Chip from '../components/Chip.astro';
-import BlocoAzul from '../components/BlocoAzul.astro';
-import Foto from '../components/Foto.astro';
-import Par from '../components/Par.astro';
-import { fotos, condicoes, empresa } from '../data/preview';
+import Acordeao from '../components/Acordeao.astro';
+import ChamadaSimular from '../components/ChamadaSimular.astro';
+import Bandeiras from '../components/Bandeiras.astro';
+import BlocoAtendimento from '../components/BlocoAtendimento.astro';
+import Participantes from '../components/Participantes.astro';
+import BarraCta from '../components/BarraCta.astro';
+import { fotos, condicoes, parcela, brl, brlInteiro } from '../data/preview';
+import { faqHome } from '../data/faq';
 
-const passos = [
-  { n: '1', t: 'você diz de quanto precisa', d: 'a simulação mostra o valor, o custo e as parcelas antes de qualquer decisão.' },
-  { n: '2', t: 'o cartão compra o título', d: 'um título de capitalização, no seu nome, comprado no limite que você já tem.' },
-  { n: '3', t: 'o título vira a garantia', d: 'é ele que garante a operação. por isso ninguém precisa consultar seu score.' },
-  { n: '4', t: 'o dinheiro cai na sua conta', d: 'e a conta que estava vencendo deixa de ser problema.' },
-];
+const icones = {
+  dinheiro: 'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6',
+  carteira: 'M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1M16 12h5',
+  raio: 'M13 2 4 14h7l-1 8 9-12h-7l1-8z',
+  celular: 'M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM11 18h2',
+  medidor: 'M12 14l4-4M3.34 19a10 10 0 1 1 17.32 0',
+  bilhete: 'M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2ZM13 5v2M13 17v2M13 11v2',
+};
 
 const situacoes = [
-  { antes: fotos.contasNaMesa, altA: 'contas e um boleto sobre a mesa da cozinha', depois: fotos.pagandoPeloCelular, altD: 'homem pagando uma conta pelo celular', t: 'a conta de luz que não espera', d: 'o corte é dia 20 e o salário é dia 30. dez dias de diferença que ninguém explica pra concessionária.' },
-  { antes: fotos.contasQuadrada, altA: 'contas, calculadora e caneta sobre a mesa', depois: fotos.maeComFilho, altD: 'mãe com o filho em casa', t: 'o remédio que acabou no meio do mês', d: 'não dá pra parcelar remédio na farmácia. e não dá pra esperar o mês virar.' },
-  { antes: fotos.cartaoECelular, altA: 'mãos segurando um cartão de crédito e um celular', depois: fotos.comercio, altD: 'pequeno comerciante no balcão da loja', t: 'a reposição que o caixa não cobre', d: 'quem vende precisa repor. às vezes a reposição chega antes do dinheiro da venda.' },
+  { t: 'precisa pagar via Pix', d: 'use o limite disponível do cartão para receber dinheiro na conta.', icon: icones.dinheiro },
+  { t: 'o serviço não aceita cartão', d: 'com o dinheiro na conta, você paga do jeito que precisar.', icon: icones.carteira },
+  { t: 'apareceu um imprevisto', d: 'resolva uma despesa pontual usando seu limite disponível.', icon: icones.raio },
+];
+
+const passos = [
+  { n: 1, t: 'você diz quanto precisa', d: 'a simulação mostra o valor, o custo e as parcelas antes de qualquer decisão.' },
+  { n: 2, t: 'use seu cartão', d: 'adquira um título de capitalização, parcelado no seu cartão.' },
+  { n: 3, t: 'o título vira garantia', d: 'é ele que garante a operação. por isso ninguém precisa consultar seu score.' },
+  { n: 4, t: 'confirme sua identidade', d: 'validação e formalização pelo celular.' },
+  { n: 5, t: 'receba o dinheiro', d: 'concluída a operação, o valor cai por Pix conforme as condições.' },
+];
+
+const diferenciais = [
+  { t: 'use seu limite disponível', d: 'transforme parte do limite do cartão em dinheiro na conta.', icon: icones.carteira },
+  { t: 'receba por Pix', d: 'concluída a operação, o dinheiro é disponibilizado conforme as condições informadas.', icon: icones.dinheiro },
+  { t: 'jornada digital', d: 'simulação, validação e formalização pelo celular.', icon: icones.celular },
+  { t: 'sem consulta de score', d: 'quem garante a operação é o título de capitalização, não o seu histórico.', icon: icones.medidor },
+  { t: 'concorra a sorteios', d: 'além de garantir a operação, o título de capitalização participa de sorteios.', icon: icones.bilhete, destaque: true },
+];
+
+const exemplo = condicoes.valorInicial;
+const nExemplo = condicoes.parcelasIniciais;
+const resumo = [
+  { rotulo: 'valor solicitado', valor: brl(exemplo) },
+  { rotulo: 'valor recebido por Pix', valor: brl(exemplo) },
+  { rotulo: 'número de parcelas', valor: `${nExemplo}x` },
+  { rotulo: 'valor da parcela', valor: brl(parcela(exemplo, nExemplo)) },
 ];
 ---
 
 <BaseLayout
-  title="Garanta Já — crédito com garantia no cartão, sem consulta ao SPC"
-  description="Crédito pequeno e rápido, garantido por um título de capitalização comprado no seu cartão. Sem consulta ao SPC. Simule antes de decidir."
+  title="Garanta Já — seu limite do cartão pode virar dinheiro no Pix"
+  description="Use parte do limite disponível do cartão de crédito e receba por Pix. Sem consulta de score. Veja valor, parcelas e CET antes de decidir."
 >
 
-  <!-- ── herói: o par, e a dobra já é o antes e o depois ───────────────── -->
-  <section class="heroi">
-    <div class="heroi-grade">
-      <div class="antes">
-        <div class="antes-inner">
-          <Chip tipo="destaque" class="selo-antes">antes</Chip>
-          <h1 class="t-display">a conta<br />vence sexta.</h1>
-          <p class="sub">a luz, o boleto, o remédio do mês. falta o dinheiro chegar antes.</p>
-        </div>
+  <!-- herói -->
+  <section class="container heroi">
+    <div class="heroi-texto">
+      <span class="selo"><span class="ponto" aria-hidden="true"></span>tem cartão e limite disponível?</span>
+      <h1 class="t-hero">seu limite pode virar dinheiro na conta.</h1>
+      <p class="t-lead">use parte do limite do cartão, receba por Pix e resolva o que o cartão não paga direto.</p>
+      <div class="acoes">
+        <Botao href="/simulador">simular agora</Botao>
+        <Botao href="#como-funciona" variante="texto">ver como funciona</Botao>
       </div>
+      <p class="nota">simular é grátis e não gera cobrança. você vê as condições antes de decidir.</p>
+      <div class="trilha" aria-label="do cartão ao Pix">
+        <span class="trilha-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3" /><path d="M2 10h20" /></svg>
+          cartão
+        </span>
+        <svg class="seta" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg>
+        <span class="trilha-item">garanta já</span>
+        <svg class="seta" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg>
+        <span class="trilha-item pix">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+          dinheiro por Pix
+        </span>
+      </div>
+    </div>
 
-      <div class="depois">
+    <div class="heroi-foto">
+      <div class="moldura">
         <img
-          class="retrato"
-          src={fotos.porta}
-          alt="mulher saindo de casa, aliviada, com o celular na mão"
-          width="768" height="1536"
-          fetchpriority="high" decoding="sync"
+          src={fotos.heroi}
+          alt="mulher sentada no sofá de casa resolvendo um pagamento pelo celular"
+          width="1024" height="1024"
+          fetchpriority="high" decoding="async"
         />
-        <div class="cartao">
-          <h2 class="cartao-titulo">e agora<br />ela está paga.</h2>
-          <Chip tipo="destaque" class="selo-spc">sem consulta ao spc</Chip>
-          <p class="escala">crédito pequeno, do tamanho da conta. a garantia é sua, então o score não entra na conta.</p>
-          <Botao href="/simulador" largura="cheia">simular agora</Botao>
-        </div>
+      </div>
+      <div class="flutuante">
+        <span class="check" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+        </span>
+        <span>
+          <span class="flutuante-rotulo">recebe por Pix</span>
+          <span class="flutuante-valor">até {brlInteiro(condicoes.valorMaximo)}</span>
+        </span>
       </div>
     </div>
   </section>
 
-  <!-- ── quem pode: a resposta é curta, e a brevidade é o argumento ────── -->
-  <section class="secao">
-    <div class="container quem-pode">
-      <div class="quem-pode-texto">
-      <h2 class="t-headline">tem cartão de crédito?<br />então dá pra começar.</h2>
-      <p class="t-lead suave">
-        o portão é esse. como é o seu cartão que compra a garantia, não existe um score
-        pra aprovar ou reprovar — existe um cartão que funciona ou não funciona.
-      </p>
-      <ul class="requisitos">
-        <li>
-          <Chip tipo="aprovado">exigência</Chip>
-          <span>ter 18 anos ou mais</span>
+  <!-- situações de uso -->
+  <section class="container secao">
+    <p class="olho">situações de uso</p>
+    <h2 class="t-secao titulo">para quando o cartão não resolve.</h2>
+    <p class="t-lead subtitulo">três situações do dia a dia em que o limite ajuda.</p>
+    <ul class="grade-cards">
+      {situacoes.map((s) => (
+        <li class="cartao situacao">
+          <span class="icone-caixa" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d={s.icon} /></svg>
+          </span>
+          <h3 class="t-card">{s.t}</h3>
+          <p>{s.d}</p>
         </li>
-        <li>
-          <Chip tipo="aprovado">exigência</Chip>
-          <span>ter um cartão de crédito no seu nome, com limite disponível</span>
-        </li>
-      </ul>
-      <p class="ressalva">
-        não prometemos aprovação garantida. a simulação mostra as condições reais antes
-        de você aceitar qualquer coisa.
-      </p>
-      </div>
-
-      <div class="quem-pode-mascote" aria-hidden="true">
-        <img src="/img/mascot.webp" alt="" width="788" height="1222" loading="lazy" />
-      </div>
-    </div>
+      ))}
+    </ul>
   </section>
 
-  <!-- ── como funciona: a sequência carrega informação, então é numerada ─ -->
-  <section class="secao fundo-claro">
+  <!-- como funciona -->
+  <section class="fundo-claro secao" id="como-funciona">
     <div class="container">
-      <h2 class="t-headline titulo-secao">quatro passos, e o estranho explicado</h2>
-      <p class="t-lead suave intro">
-        a parte que soa esquisita é a do título de capitalização. é justamente ela
-        que faz o resto funcionar.
-      </p>
-
+      <p class="olho">como funciona</p>
+      <h2 class="t-secao titulo espaco-grande">do limite disponível ao dinheiro na sua conta.</h2>
       <ol class="passos">
         {passos.map((p) => (
-          <li class="passo">
+          <li class:list={['passo', { final: p.n === passos.length }]}>
             <span class="passo-n" aria-hidden="true">{p.n}</span>
-            <div>
-              <h3 class="t-title">{p.t}</h3>
-              <p class="t-body suave">{p.d}</p>
-            </div>
+            <h3>{p.t}</h3>
+            <p>{p.d}</p>
           </li>
         ))}
       </ol>
+      <div class="acoes espaco-acoes">
+        <Botao href="/simulador">quero simular</Botao>
+        <Botao href="/como-funciona" variante="contorno">ver etapa por etapa</Botao>
+      </div>
+    </div>
+  </section>
 
-      <div class="passos-foto">
-        <Foto src={fotos.comprovante} alt="celular na mão mostrando a confirmação com um visto verde na tela" proporcao="1:1" />
-        <div class="passos-nota">
-          <h3 class="t-title">o título fica no seu nome</h3>
-          <p class="t-body suave">
-            ele não é uma taxa e não é uma venda casada disfarçada: é a garantia da
-            operação, e é o motivo de este crédito existir pra quem o banco recusa.
-          </p>
-          <Botao href="/como-funciona" variante="texto">ver a operação inteira</Botao>
+  <!-- chamada para simulação -->
+  <section class="container secao">
+    <ChamadaSimular />
+  </section>
+
+  <!-- diferenciais -->
+  <section class="container secao sem-topo">
+    <h2 class="t-secao titulo espaco-grande">por que o garanta já.</h2>
+    <ul class="diferenciais">
+      {diferenciais.map((d) => (
+        <li class:list={['diferencial', { destaque: d.destaque }]}>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={d.icon} /></svg>
+          <h3>{d.t}</h3>
+          <p>{d.d}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- transparência -->
+  <section class="fundo-claro secao">
+    <div class="container transparencia">
+      <div>
+        <p class="olho">transparência</p>
+        <h2 class="t-secao titulo">você sabe as condições antes de decidir.</h2>
+        <p class="t-lead subtitulo">antes de confirmar, a tela mostra tudo o que você vai pagar. em linguagem simples, sem letra miúda escondida.</p>
+        <div class="mesma-taxa">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+          <p><strong>a taxa é a mesma para qualquer perfil.</strong> ela não muda por causa do seu score ou do seu histórico — só varia conforme o valor que você escolhe.</p>
         </div>
+        <Botao href="/simulador" variante="azul" tamanho="medio">ver condições de exemplo</Botao>
       </div>
-    </div>
-  </section>
 
-  <!-- ── situações: três pares, tensão e resolução ──────────────────────── -->
-  <section class="secao">
-    <div class="container">
-      <h2 class="t-headline titulo-secao">três situações que a gente ouve toda semana</h2>
-
-      <div class="situacoes">
-        {situacoes.map((s, i) => (
-          <Par inverter={i % 2 === 1} class="situacao">
-            <div slot="antes" class="situacao-texto">
-              <h3 class="t-title">{s.t}</h3>
-              <p class="t-body suave">{s.d}</p>
-            </div>
-            <div slot="depois" class="situacao-fotos">
-              <Foto src={s.antes} alt={s.altA} proporcao="3:2" class="f-antes" />
-              <Foto src={s.depois} alt={s.altD} proporcao="1:1" class="f-depois" posicao={i === 2 ? '50% 34%' : '50% 50%'} />
-            </div>
-          </Par>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ── segurança: um bloco azul por viewport, e este é o da home ──────── -->
-  <section class="secao fundo-claro">
-    <div class="container seguranca">
-      <BlocoAzul titulo="por que isto não é golpe">
-        <p>
-          quem responde por esta operação é a <strong>{empresa.razaoSocial}</strong>,
-          cnpj <span class="tabular">{empresa.cnpj}</span>. o nome está no rodapé de
-          todas as páginas, e não em letra miúda.
-        </p>
-        <p>
-          a gente não pede depósito antecipado, não cobra taxa pra liberar,
-          e não manda ninguém pagar nada por fora pra “destravar” o crédito.
-          se alguém fizer isso em nome do Garanta Já, não é o Garanta Já.
-        </p>
-        <Botao slot="acao" href="/seguranca" variante="sobre-azul">ver canais oficiais</Botao>
-      </BlocoAzul>
-
-      <div class="conferindo">
-        <Foto src={fotos.conferindo} alt="homem lendo com calma um documento impresso na mesa da cozinha" proporcao="2:1" />
-      </div>
-    </div>
-  </section>
-
-  <!-- ── custo: o número aparece antes da decisão, não depois ───────────── -->
-  <section class="secao">
-    <div class="container custo">
-      <h2 class="t-headline titulo-secao">o custo aparece antes, não depois</h2>
-      <p class="t-lead suave intro">
-        na simulação você vê o valor, o custo efetivo total e as parcelas na mesma tela —
-        antes de assinar qualquer coisa.
-      </p>
-
-      <div class="custo-grade">
-      <div class="exemplo" role="group" aria-label="exemplo de simulação">
-        <p class="exemplo-rotulo t-label suave">exemplo de simulação</p>
-        <p class="t-stat valor">{condicoes.valorExemplo}</p>
-        <dl class="exemplo-lista tabular">
-          <div><dt>custo efetivo total</dt><dd>{condicoes.cetMensal}</dd></div>
-          <div><dt>equivalente ao ano</dt><dd>{condicoes.cetAnual}</dd></div>
+      <div class="resumo">
+        <div class="resumo-topo">
+          <span class="resumo-titulo">resumo da operação</span>
+          <span class="etiqueta">exemplo</span>
+        </div>
+        <dl class="tabular">
+          {resumo.map((r) => (
+            <div class="linha"><dt>{r.rotulo}</dt><dd>{r.valor}</dd></div>
+          ))}
+          <div class="linha cet">
+            <dt>CET <span class="cet-extenso">custo efetivo total</span></dt>
+            <dd>{condicoes.cetMensal}<span class="cet-ano">{condicoes.cetAnual}</span></dd>
+          </div>
         </dl>
-        <p class="exemplo-aviso">
-          números de demonstração, para visualização desta prévia. as condições reais
-          aparecem na sua simulação.
-        </p>
-      </div>
-
-      <aside class="custo-acao">
-        <svg class="custo-icone" width="48" height="48" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M4 7h10M18 7h2M4 12h4M12 12h8M4 17h12M20 17h0" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" fill="none" />
-          <circle cx="16" cy="7" r="2.4" stroke="currentColor" stroke-width="1.75" fill="none" />
-          <circle cx="10" cy="12" r="2.4" stroke="currentColor" stroke-width="1.75" fill="none" />
-          <circle cx="18" cy="17" r="2.4" stroke="currentColor" stroke-width="1.75" fill="none" />
-        </svg>
-        <h3 class="t-title">veja o seu número</h3>
-        <p class="t-body suave">
-          você escolhe de quanto precisa e o custo aparece na mesma tela. sem consulta
-          ao spc e sem compromisso.
-        </p>
-        <Botao href="/simulador" largura="cheia">simular agora</Botao>
-      </aside>
+        <p class="resumo-nota">valores ilustrativos. as condições reais aparecem na simulação e estão sujeitas a homologação.</p>
       </div>
     </div>
   </section>
 
-  <!-- ── fecho ──────────────────────────────────────────────────────────── -->
-  <section class="fecho">
-    <img class="fecho-foto" src={fotos.alivioLargo} alt="mulher relaxada na porta de casa, com o celular na mão" width="1536" height="768" loading="lazy" />
-    <div class="fecho-conteudo">
-      <div class="container">
-        <h2 class="t-headline">a conta continua vencendo sexta.</h2>
-        <p class="t-lead fecho-sub">leva menos tempo simular do que decidir.</p>
-        <Botao href="/simulador" variante="sobre-azul">simular agora</Botao>
-      </div>
+  <!-- cartões aceitos -->
+  <section class="container secao">
+    <Bandeiras />
+  </section>
+
+  <!-- dúvidas -->
+  <section class="secao sem-topo">
+    <div class="container estreito">
+      <h2 class="t-secao titulo espaco-grande">dúvidas mais comuns.</h2>
+      <Acordeao itens={faqHome} />
+      <a href="/duvidas" class="link-seta">
+        ver todas as dúvidas
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg>
+      </a>
     </div>
   </section>
 
+  <!-- atendimento -->
+  <section class="container secao sem-topo">
+    <BlocoAtendimento />
+  </section>
+
+  <!-- quem participa: discreto, no fim da página -->
+  <section class="container secao sem-topo participantes">
+    <p class="olho">confiança</p>
+    <h2 class="titulo-discreto">quem participa da operação.</h2>
+    <p class="subtitulo-discreto">o garanta já é a marca que acompanha você na experiência. empresas especializadas participam da estrutura da operação.</p>
+    <Participantes />
+  </section>
+
+  <BarraCta />
 </BaseLayout>
 
 <style>
-  /* ── herói ─────────────────────────────────────────────────────────── */
-  .heroi-grade { display: grid; grid-template-columns: 1fr; }
-
-  .antes { background: var(--cinza-claro); }
-  .antes-inner {
-    padding: var(--s-lg) var(--gutter) var(--s-xl);
-    max-width: var(--container);
-    margin-inline: auto;
-  }
-  .selo-antes { margin-bottom: var(--s-md); }
-  .antes h1 { text-wrap: balance; }
-  .sub {
-    margin-top: var(--s-sm);
-    max-width: 32ch;
-    color: var(--cinza-medio);
-    font-size: var(--fs-base);
-    line-height: 1.5;
-  }
-
-  .depois { position: relative; min-height: calc(100svh - 116px - 210px); }
-  .retrato {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 34%;
-  }
-  .cartao {
-    position: relative;
-    margin: 0 var(--s-md) var(--s-md);
-    top: 0;
-    background: var(--branco);
-    border-radius: var(--r-lg);
-    padding: var(--s-lg) var(--s-lg) var(--s-md);
-  }
-  .depois { display: flex; align-items: flex-end; }
-  .cartao-titulo {
-    font-size: var(--fs-subhead);
-    font-weight: 800;
-    letter-spacing: -0.028em;
-    line-height: 1.06;
-    margin-bottom: var(--s-xs);
-    text-wrap: balance;
-  }
-  .selo-spc { margin-bottom: var(--s-sm); }
-  .escala {
-    font-size: var(--fs-body-sm);
-    line-height: 1.45;
-    color: var(--cinza-medio);
-    margin-bottom: var(--s-md);
-    max-width: 34ch;
-  }
-
-  @media (min-width: 1024px) {
-    .heroi-grade { grid-template-columns: 1fr 1fr; align-items: stretch; min-height: 72vh; }
-    .antes { display: flex; align-items: center; }
-    .antes-inner { padding: var(--s-4xl) var(--s-3xl) var(--s-4xl) var(--gutter); margin-inline: 0; margin-left: auto; max-width: 640px; }
-    .depois { min-height: 100%; }
-    .cartao { margin: 0 var(--s-2xl) var(--s-2xl); max-width: 460px; padding: var(--s-xl); }
-  }
-
-  /* ── quem pode ─────────────────────────────────────────────────────── */
-  .quem-pode { display: grid; gap: var(--s-2xl); align-items: center; }
-  .quem-pode h2 { text-wrap: balance; max-width: 18ch; }
-
-  /* o mascote é guia, nunca cliente. aqui não há fotografia real por perto,
-     então ele fica direto sobre o branco, sem caixa. */
-  .quem-pode-mascote { display: none; }
-  @media (min-width: 1024px) {
-    .quem-pode { grid-template-columns: 1fr 0.46fr; gap: var(--s-2xl); }
-    .quem-pode-mascote {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .quem-pode-mascote img { width: auto; height: 460px; max-width: 100%; object-fit: contain; }
-  }
-  @media (min-width: 1280px) {
-    .quem-pode-mascote img { height: 500px; }
-  }
-  .quem-pode .t-lead { margin-top: var(--s-lg); }
-  .requisitos {
-    margin-top: var(--s-xl);
+  /* herói */
+  .heroi {
+    padding-block: clamp(32px, 6vw, 72px) clamp(40px, 5vw, 56px);
     display: grid;
-    gap: var(--s-md);
-    max-width: 46rem;
-  }
-  .requisitos li {
-    display: flex;
-    align-items: center;
-    gap: var(--s-md);
-    flex-wrap: wrap;
-    padding: var(--s-md) var(--s-lg);
-    background: var(--cinza-claro);
-    border-radius: var(--r-lg);
-    font-size: var(--fs-body);
-    font-weight: 500;
-  }
-  .ressalva {
-    margin-top: var(--s-lg);
-    font-size: var(--fs-body-sm);
-    color: var(--cinza-medio);
-    max-width: 58ch;
-  }
-
-  /* ── como funciona ─────────────────────────────────────────────────── */
-  .titulo-secao { text-wrap: balance; max-width: 22ch; }
-  .intro { margin-top: var(--s-md); }
-
-  .passos { margin-top: var(--s-2xl); display: grid; gap: var(--s-lg); }
-  .passo { display: flex; gap: var(--s-md); align-items: flex-start; }
-  .passo-n {
-    flex: none;
-    font-size: var(--fs-numeral);
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -0.03em;
-    color: var(--amarelo);
-    min-width: 1.4ch;
-    font-variant-numeric: tabular-nums;
-  }
-  .passo h3 { margin-bottom: var(--s-2xs); }
-
-  .passos-foto {
-    margin-top: var(--s-2xl);
-    display: grid;
-    gap: var(--s-xl);
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    gap: clamp(28px, 5vw, 56px);
     align-items: center;
   }
-  .passos-nota :global(.botao) { margin-top: var(--s-sm); }
-
-  @media (min-width: 768px) {
-    .passos { grid-template-columns: 1fr 1fr; gap: var(--s-xl) var(--s-2xl); }
-  }
-  @media (min-width: 1024px) {
-    .passos-foto { grid-template-columns: 1fr 1.2fr; gap: var(--s-3xl); }
-  }
-
-  /* ── situações ─────────────────────────────────────────────────────── */
-  .situacoes { margin-top: var(--s-2xl); display: grid; gap: var(--s-4xl); }
-  .situacao-texto h3 { margin-bottom: var(--s-sm); }
-  .situacao-fotos { display: grid; gap: var(--s-md); grid-template-columns: 1fr; }
-  @media (min-width: 640px) {
-    .situacao-fotos { grid-template-columns: 1fr 1fr; align-items: center; }
-  }
-
-  /* ── o par que resolve ─────────────────────────────────────────────
-     A tese da página é que toda seção é um par: tensão, depois resolução.
-     Até aqui isso só existia na composição parada. Agora acontece no tempo:
-     o problema entra primeiro, a solução chega atrás e é a última a assentar.
-
-     O padrão é visível. A animação só recorta a partir dele, então sem
-     suporte, sem JS ou com movimento reduzido a seção fica exatamente como
-     está hoje — nada some. Roda no compositor, custo zero de banda. */
-  @keyframes par-tensao {
-    from { clip-path: inset(0 0 92% 0 round var(--r-xl)); transform: translateY(78px); }
-    to   { clip-path: inset(0 0 0 0 round var(--r-xl)); transform: translateY(0); }
-  }
-  @keyframes par-resolucao {
-    from { clip-path: inset(0 0 96% 0 round var(--r-xl)); transform: translateY(124px) scale(1.07); }
-    to   { clip-path: inset(0 0 0 0 round var(--r-xl)); transform: translateY(0) scale(1); }
-  }
-  /* o par espelhado resolve pelo outro lado, para o ritmo não virar loop */
-  @keyframes par-tensao-alt {
-    from { clip-path: inset(92% 0 0 0 round var(--r-xl)); transform: translateY(-78px); }
-    to   { clip-path: inset(0 0 0 0 round var(--r-xl)); transform: translateY(0); }
-  }
-  @keyframes par-resolucao-alt {
-    from { clip-path: inset(96% 0 0 0 round var(--r-xl)); transform: translateY(-124px) scale(1.07); }
-    to   { clip-path: inset(0 0 0 0 round var(--r-xl)); transform: translateY(0) scale(1); }
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
-      .situacao-fotos :global(.f-antes),
-      .situacao-fotos :global(.f-depois) {
-        animation-timeline: view();
-        animation-duration: auto;   /* sem isto a duração é 0s e o scroll não conduz */
-        animation-fill-mode: both;
-        animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
-      }
-      .situacao-fotos :global(.f-antes) {
-        animation-name: par-tensao;
-        animation-range: entry 12% entry 62%;
-      }
-      .situacao-fotos :global(.f-depois) {
-        animation-name: par-resolucao;
-        animation-range: entry 34% entry 92%;
-      }
-      :global(.par.inverter) .situacao-fotos :global(.f-antes) { animation-name: par-tensao-alt; }
-      :global(.par.inverter) .situacao-fotos :global(.f-depois) { animation-name: par-resolucao-alt; }
-    }
-  }
-
-  /* ── segurança ─────────────────────────────────────────────────────── */
-  .seguranca { display: grid; gap: var(--s-xl); }
-  @media (min-width: 1024px) {
-    /* a foto acompanha a altura do bloco azul e recorta o excedente */
-    .seguranca { grid-template-columns: 1.15fr 0.85fr; align-items: stretch; gap: var(--s-2xl); }
-    .conferindo { min-height: 0; }
-    .conferindo :global(.foto) { height: 100%; }
-    .conferindo :global(.foto img) { height: 100%; aspect-ratio: auto; object-fit: cover; }
-  }
-
-  /* ── custo ─────────────────────────────────────────────────────────── */
-  .custo-grade { margin-top: var(--s-2xl); display: grid; gap: var(--s-lg); align-items: stretch; }
-  @media (min-width: 900px) {
-    .custo-grade { grid-template-columns: 1.25fr 0.75fr; gap: var(--s-xl); }
-  }
-
-  .custo-acao {
-    background: var(--azul-suave);
-    border-radius: var(--r-xl);
-    padding: clamp(24px, 4vw, 36px);
+  .heroi-texto {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
+    gap: 22px;
+    animation: subir 420ms ease-out both;
+  }
+  .selo {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-xs);
+    background: var(--amarelo-suave);
+    color: var(--azul);
+    font-weight: 600;
+    font-size: var(--fs-small);
+    padding: 8px 16px;
+    border-radius: var(--r-pill);
+  }
+  .ponto { width: 8px; height: 8px; border-radius: 50%; background: var(--amarelo); }
+  .heroi .t-lead { max-width: 36ch; }
+  .acoes { display: flex; gap: var(--s-sm); flex-wrap: wrap; align-items: center; }
+  .nota { font-size: var(--fs-small); color: var(--cinza-medio); }
+  .trilha {
+    display: flex;
+    align-items: center;
+    gap: var(--s-sm);
+    flex-wrap: wrap;
+    border-top: 1px solid var(--linha);
+    padding-top: 20px;
+  }
+  .trilha-item {
+    display: inline-flex; align-items: center; gap: var(--s-xs);
+    font-weight: 600; font-size: var(--fs-body-sm); color: var(--azul);
+  }
+  .trilha .seta { color: var(--amarelo-pressionado); }
+  .trilha .pix { color: var(--verde-acao); font-weight: 700; }
+
+  .heroi-foto { position: relative; animation: subir 520ms ease-out both; margin-bottom: 18px; }
+  .moldura {
+    border-radius: var(--r-2xl);
+    overflow: hidden;
+    background: var(--cinza-claro);
+    aspect-ratio: 4 / 3;
+  }
+  .moldura img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+  .flutuante {
+    position: absolute;
+    left: -8px;
+    bottom: -18px;
+    background: var(--branco);
+    border-radius: var(--r-xl);
+    box-shadow: var(--sombra-elevada);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .check {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: var(--verde-suave); color: var(--verde-acao);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .flutuante-rotulo { display: block; font-size: var(--fs-micro); color: var(--cinza-medio); font-weight: 500; }
+  .flutuante-valor { display: block; font-size: 1.5rem; font-weight: 800; color: var(--azul); line-height: 1.15; }
+  @media (max-width: 480px) {
+    .flutuante { left: 12px; }
+  }
+
+  /* seções */
+  .sem-topo { padding-top: 0; }
+  .titulo { margin-bottom: 10px; max-width: 24ch; }
+  .espaco-grande { margin-bottom: var(--s-xl); }
+  .subtitulo { margin-bottom: var(--s-xl); }
+  .estreito { max-width: 860px; }
+
+  .grade-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+    gap: 20px;
+  }
+  .situacao p { font-size: var(--fs-base); }
+  .icone-caixa {
+    display: flex; width: 46px; height: 46px; border-radius: 14px;
+    background: var(--azul-suave); color: var(--azul);
+    align-items: center; justify-content: center; margin-bottom: 18px;
+  }
+
+  /* passos */
+  .passos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(196px, 100%), 1fr));
+    gap: var(--s-md);
+  }
+  .passo {
+    background: var(--branco);
+    border-radius: var(--r-xl);
+    padding: var(--s-lg);
+    box-shadow: var(--sombra-card);
+    border-top: 4px solid var(--amarelo);
+    display: flex;
+    flex-direction: column;
     gap: var(--s-sm);
   }
-  .custo-icone { color: var(--azul); margin-bottom: var(--s-2xs); }
-  .custo-acao h3 { text-wrap: balance; }
-  .custo-acao p { font-size: var(--fs-body-sm); }
-  .custo-acao :global(.botao) { margin-top: var(--s-md); }
+  .passo h3 { font-size: 1.125rem; font-weight: 700; }
+  .passo p { font-size: var(--fs-body-sm); }
+  .passo-n {
+    display: flex; width: 40px; height: 40px; border-radius: 50%;
+    background: var(--amarelo); color: var(--azul);
+    font-weight: 800; font-size: 1.0625rem;
+    align-items: center; justify-content: center;
+  }
+  .passo.final { border-top-color: var(--verde); }
+  .passo.final .passo-n { background: var(--verde-acao); color: var(--branco); }
+  .espaco-acoes { margin-top: var(--s-xl); }
 
-  .exemplo {
-    margin-top: 0;
+  /* diferenciais */
+  .diferenciais {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+    gap: var(--s-md);
+  }
+  .diferencial {
     background: var(--cinza-claro);
     border-radius: var(--r-xl);
-    padding: clamp(24px, 5vw, 40px);
-    max-width: 44rem;
+    padding: 26px;
+    color: var(--azul);
   }
-  .exemplo-rotulo { margin-bottom: var(--s-xs); }
-  .valor { color: var(--cinza-escuro); }
-  .exemplo-lista {
-    margin-top: var(--s-lg);
-    display: grid;
-    gap: var(--s-sm);
-    border-top: 1px solid var(--linha);
-    padding-top: var(--s-lg);
-  }
-  .exemplo-lista > div { display: flex; justify-content: space-between; gap: var(--s-md); flex-wrap: wrap; }
-  .exemplo-lista dt { color: var(--cinza-medio); }
-  .exemplo-lista dd { margin: 0; font-weight: 600; }
-  .exemplo-aviso {
-    margin-top: var(--s-lg);
-    font-size: var(--fs-small);
-    line-height: 1.5;
-    color: var(--cinza-medio);
-    max-width: 52ch;
-  }
+  .diferencial svg { margin-bottom: var(--s-md); }
+  .diferencial h3 { font-size: 1.125rem; font-weight: 700; margin-bottom: var(--s-xs); }
+  .diferencial p { font-size: var(--fs-body-sm); color: var(--cinza-escuro); }
+  .diferencial.destaque { background: var(--amarelo-suave); box-shadow: inset 0 0 0 2px var(--amarelo); }
 
-  /* ── fecho ─────────────────────────────────────────────────────────── */
-  .fecho { position: relative; isolation: isolate; }
-  .fecho-foto {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 42%;
-    z-index: -2;
+  /* transparência */
+  .transparencia {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: 36px;
+    align-items: center;
   }
-  .fecho::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(to top, rgba(26, 34, 43, 0.88), rgba(26, 34, 43, 0.42));
+  .transparencia .subtitulo { margin-bottom: var(--s-lg); max-width: 40ch; }
+  .mesma-taxa {
+    display: flex;
+    gap: var(--s-sm);
+    align-items: flex-start;
+    background: var(--branco);
+    border-left: 4px solid var(--amarelo);
+    border-radius: var(--r-md);
+    padding: var(--s-md) 18px;
+    margin-bottom: var(--s-lg);
+    max-width: 46ch;
   }
-  .fecho-conteudo { padding-block: clamp(64px, 10vw, 140px); color: var(--branco); }
-  .fecho-conteudo h2 { text-wrap: balance; max-width: 20ch; }
-  .fecho-sub { margin: var(--s-md) 0 var(--s-xl); color: #DCE3EA; }
+  .mesma-taxa svg { flex: none; color: var(--azul); margin-top: 2px; }
+  .mesma-taxa p { font-size: var(--fs-body-sm); line-height: 1.55; }
+  .mesma-taxa strong { color: var(--azul); }
+
+  .resumo {
+    background: var(--branco);
+    border-radius: var(--r-2xl);
+    box-shadow: var(--sombra-elevada);
+    padding: 26px 26px 20px;
+  }
+  .resumo-topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-xs); }
+  .resumo-titulo { font-size: var(--fs-small); font-weight: 700; color: var(--cinza-medio); }
+  .etiqueta {
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--verde-acao-profundo); background: var(--verde-suave);
+    padding: 5px 10px; border-radius: var(--r-pill);
+  }
+  .linha {
+    display: flex; justify-content: space-between; gap: var(--s-md);
+    padding: 13px 0; border-bottom: 1px solid var(--linha);
+  }
+  .linha dt { font-weight: 500; }
+  .linha dd { margin: 0; color: var(--azul); font-weight: 700; text-align: right; }
+  .linha.cet {
+    background: var(--azul-suave);
+    border-bottom: 0;
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    margin: 12px -8px 0;
+    align-items: center;
+  }
+  .cet dt { font-weight: 800; color: var(--azul); }
+  .cet-extenso { display: block; font-size: var(--fs-micro); font-weight: 500; color: var(--cinza-medio); }
+  .cet dd { font-size: 1.25rem; font-weight: 800; }
+  .cet-ano { display: block; font-size: var(--fs-micro); font-weight: 600; color: var(--cinza-medio); }
+  .resumo-nota { font-size: var(--fs-micro); color: var(--cinza-medio); margin-top: var(--s-md); }
+
+  /* dúvidas */
+  .link-seta {
+    margin-top: 22px;
+    display: inline-flex; align-items: center; gap: var(--s-xs);
+    min-height: 44px;
+    font-weight: 700; text-decoration: none;
+  }
+  .link-seta:hover { text-decoration: underline; }
+
+  /* quem participa */
+  .participantes { padding-top: clamp(24px, 4vw, 40px); }
+  .titulo-discreto { font-size: clamp(1.375rem, 2.4vw, 1.75rem); font-weight: 800; margin-bottom: var(--s-xs); }
+  .subtitulo-discreto { color: var(--cinza-medio); max-width: 60ch; margin-bottom: var(--s-lg); }
 </style>

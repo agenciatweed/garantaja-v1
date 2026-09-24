@@ -1,322 +1,251 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Botao from '../components/Botao.astro';
-import { condicoes, contato } from '../data/preview';
+import { condicoes, parcela, brl, brlInteiro } from '../data/preview';
+
+const v0 = condicoes.valorInicial;
+const n0 = condicoes.parcelasIniciais;
+const p0 = parcela(v0, n0);
 ---
 
 <BaseLayout
   title="Simulador — Garanta Já"
-  description="Veja valor, custo efetivo total e parcelas antes de decidir. Simulação sem consulta ao SPC."
+  description="Veja quanto você recebe por Pix, as parcelas no cartão e o CET antes de decidir. Simular é grátis e não gera cobrança."
 >
-  <section class="secao-curta capa">
+  <div class="fundo">
     <div class="container">
-      <h1 class="t-display">de quanto<br />você precisa?</h1>
-      <p class="t-lead sub">
-        a simulação não consulta seu spc e não vale como contratação.
-        é só pra você ver o número antes de decidir.
-      </p>
-    </div>
-  </section>
+      <a href="/" class="voltar">← início</a>
 
-  <section class="secao-curta">
-    <div class="container sim-grade">
+      <form
+        class="simulador"
+        id="sim"
+        novalidate
+        data-taxa={condicoes.taxaMensal}
+        onsubmit="return false"
+      >
+        <p class="rotulo">simulador · demonstração</p>
+        <h1 class="titulo">quanto você quer receber?</h1>
 
-      <form class="painel" id="sim" novalidate>
-        <div class="campo">
-          <label for="valor">valor que você precisa</label>
-          <div class="moeda">
-            <span aria-hidden="true">R$</span>
-            <input
-              id="valor" name="valor" type="text" inputmode="numeric"
-              autocomplete="off" value="850" aria-describedby="valor-ajuda valor-erro"
-            />
-          </div>
-          <input
-            id="faixa" type="range" min="100" max="1000" step="10" value="850"
-            aria-label="valor que você precisa, em reais"
-          />
-          <p id="valor-ajuda" class="ajuda">entre R$ 100 e R$ 1.000 nesta prévia</p>
-          <p id="valor-erro" class="erro" role="alert" hidden></p>
+        <output class="valor tabular" id="saida-valor" for="valor">{brlInteiro(v0)}</output>
+        <p class="valor-legenda">valor que cai na sua conta por Pix</p>
+
+        <input
+          id="valor"
+          type="range"
+          min={condicoes.valorMinimo}
+          max={condicoes.valorMaximo}
+          step={condicoes.valorPasso}
+          value={v0}
+          aria-label="valor que você quer receber, em reais"
+          aria-valuetext={brlInteiro(v0)}
+        />
+        <div class="limites tabular" aria-hidden="true">
+          <span>{brlInteiro(condicoes.valorMinimo)}</span>
+          <span>{brlInteiro(condicoes.valorMaximo)}</span>
         </div>
 
-        <fieldset class="campo">
-          <legend>em quantas parcelas</legend>
-          <div class="parcelas" role="radiogroup" aria-label="número de parcelas">
-            {[3, 6, 9, 12].map((n) => (
-              <label class="parcela">
-                <input type="radio" name="parcelas" value={n} checked={n === 6} />
+        <fieldset class="parcelas">
+          <legend>em quantas vezes no cartão?</legend>
+          <div class="opcoes">
+            {condicoes.opcoesParcelas.map((n) => (
+              <label class="opcao">
+                <input type="radio" name="parcelas" value={n} checked={n === n0} />
                 <span>{n}x</span>
               </label>
             ))}
           </div>
         </fieldset>
-      </form>
 
-      <aside class="resultado" id="resultado" aria-live="polite">
-        <p class="t-label suave">você recebe</p>
-        <p class="t-stat valor-saida tabular" id="saida-valor">R$ 850,00</p>
-
-        <dl class="linhas tabular">
-          <div><dt>parcelas</dt><dd id="saida-parcelas">6x de R$ 149,70</dd></div>
-          <div><dt>custo efetivo total</dt><dd>{condicoes.cetMensal}</dd></div>
-          <div><dt>equivalente ao ano</dt><dd>{condicoes.cetAnual}</dd></div>
-          <div class="total"><dt>total a pagar</dt><dd id="saida-total">R$ 898,20</dd></div>
+        <dl class="resultado tabular" aria-live="polite">
+          <div><dt>você recebe</dt><dd id="r-recebe">{brl(v0)}</dd></div>
+          <div><dt>forma de recebimento</dt><dd>Pix</dd></div>
+          <div><dt>parcelas no cartão</dt><dd id="r-n">{n0}x</dd></div>
+          <div><dt>total da operação</dt><dd id="r-total">{brl(p0 * n0)}</dd></div>
+          <div><dt>CET (exemplo)</dt><dd>{condicoes.cetMensal}</dd></div>
+          <div class="parcela"><dt>parcela</dt><dd id="r-parcela">{n0}x de {brl(p0)}</dd></div>
         </dl>
 
-        <p class="demo">
-          <strong>números de demonstração.</strong> esta prévia calcula sobre uma taxa
-          fictícia de {condicoes.cetMensal}. as condições reais, incluindo iof e
-          encargos, aparecem na contratação.
-        </p>
+        <p class="mesma-taxa">a taxa é a mesma para qualquer perfil — só varia conforme o valor escolhido.</p>
 
-        <button type="button" class="avancar" id="avancar">quero contratar</button>
+        <button type="button" class="avancar" id="avancar">continuar com essas condições</button>
 
         <div class="handoff" id="handoff" hidden role="status">
-          <h2 class="t-title">a contratação ainda não está ligada</h2>
+          <h2>a contratação ainda não está ligada</h2>
           <p>
             a jornada de contratação está sendo construída pela equipe de tecnologia.
-            quando ela existir, este botão leva direto pra lá, sem trocar de identidade
-            visual no caminho.
-          </p>
-          <p class="handoff-agora">
-            o canal oficial de atendimento está sendo definido e aparece em
-            <a href="/seguranca">segurança e confiança</a> assim que existir.
+            quando ela existir, este botão leva direto pra lá — com as mesmas cores,
+            botões e linguagem, e com os parâmetros de campanha preservados.
           </p>
         </div>
-      </aside>
 
+        <p class="nota">
+          valores ilustrativos desta prévia. as condições reais, incluindo o valor do título
+          de capitalização, aparecem na contratação, antes de você confirmar.
+        </p>
+      </form>
     </div>
-  </section>
-
-  <section class="secao fundo-claro">
-    <div class="container duvidas">
-      <h2 class="t-headline">antes de decidir</h2>
-      <ul class="lista">
-        <li><strong>não consultamos seu spc.</strong> a garantia é o título comprado no seu cartão, então não há score pra avaliar.</li>
-        <li><strong>a simulação não contrata nada.</strong> nenhum valor é debitado e nenhum título é comprado enquanto você só simula.</li>
-        <li><strong>o custo está todo aqui.</strong> não existe taxa que apareça depois, nem pagamento por fora.</li>
-      </ul>
-      <Botao href="/faq" variante="texto">ver todas as dúvidas</Botao>
-    </div>
-  </section>
+  </div>
 </BaseLayout>
 
 <style>
-  .capa h1 { text-wrap: balance; }
-  .capa .sub { margin-top: var(--s-md); color: var(--cinza-medio); }
+  .fundo { background: var(--cinza-claro); padding-block: 24px clamp(44px, 6vw, 80px); }
+  .fundo .container { max-width: 600px; }
 
-  .sim-grade { display: grid; gap: var(--s-xl); align-items: start; }
-
-  .painel { display: grid; gap: var(--s-xl); }
-  .campo { border: 0; padding: 0; margin: 0; display: grid; gap: var(--s-sm); }
-  .campo label, .campo legend {
-    font-size: var(--fs-small); font-weight: 500; letter-spacing: 0.06em;
-    color: var(--cinza-medio); padding: 0;
-  }
-
-  .moeda {
-    display: flex; align-items: center; gap: var(--s-xs);
+  .simulador {
+    margin-top: var(--s-xs);
     background: var(--branco);
-    border: 1px solid var(--linha-forte);
-    border-radius: var(--r-md);
-    padding: 0 var(--s-md);
-    min-height: 68px;
-    transition: border-color 160ms var(--ease), box-shadow 160ms var(--ease);
+    border-radius: var(--r-2xl);
+    box-shadow: var(--sombra-elevada);
+    padding: clamp(22px, 5vw, 32px);
   }
-  .moeda:focus-within {
-    border-color: var(--azul);
-    box-shadow: 0 0 0 3px var(--azul-suave);
-  }
-  .moeda span { font-size: var(--fs-subhead); font-weight: 600; color: var(--cinza-medio); }
-  .moeda input {
-    flex: 1; min-width: 0;
-    border: 0; outline: 0; background: none;
-    font-family: var(--fonte);
-    font-size: var(--fs-valor);
+  .rotulo { font-size: var(--fs-micro); font-weight: 600; color: var(--cinza-medio); }
+  .titulo { font-size: clamp(1.5rem, 4vw, 1.75rem); font-weight: 800; margin-top: 2px; }
+
+  .valor {
+    display: block;
+    text-align: center;
+    margin-top: var(--s-lg);
+    font-size: clamp(2.5rem, 9vw, 3rem);
     font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--cinza-escuro);
-    font-variant-numeric: tabular-nums;
-    padding: var(--s-sm) 0;
+    color: var(--azul);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
   }
+  .valor-legenda { text-align: center; font-size: var(--fs-small); color: var(--cinza-medio); margin-top: 4px; }
 
   input[type='range'] {
-    width: 100%; height: 44px; background: none; -webkit-appearance: none; appearance: none;
+    width: 100%;
+    height: 44px;
+    margin-top: var(--s-md);
+    background: none;
+    -webkit-appearance: none;
+    appearance: none;
+    --pct: 58%;
   }
   input[type='range']::-webkit-slider-runnable-track {
-    height: 6px; border-radius: var(--r-pill); background: var(--linha);
+    height: 8px; border-radius: var(--r-pill);
+    background: linear-gradient(to right, var(--verde-acao) var(--pct), var(--linha) var(--pct));
   }
-  input[type='range']::-moz-range-track {
-    height: 6px; border-radius: var(--r-pill); background: var(--linha);
-  }
+  input[type='range']::-moz-range-track { height: 8px; border-radius: var(--r-pill); background: var(--linha); }
+  input[type='range']::-moz-range-progress { height: 8px; border-radius: var(--r-pill); background: var(--verde-acao); }
   input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none; appearance: none;
-    width: 28px; height: 28px; margin-top: -11px;
-    border-radius: 50%; background: var(--azul); border: 3px solid var(--branco);
-    box-shadow: var(--sombra-repouso); cursor: pointer;
+    width: 28px; height: 28px; margin-top: -10px;
+    border-radius: 50%; background: var(--branco);
+    border: 2px solid var(--linha-forte);
+    box-shadow: var(--sombra-card); cursor: pointer;
   }
   input[type='range']::-moz-range-thumb {
-    width: 28px; height: 28px;
-    border-radius: 50%; background: var(--azul); border: 3px solid var(--branco);
-    box-shadow: var(--sombra-repouso); cursor: pointer;
+    width: 26px; height: 26px;
+    border-radius: 50%; background: var(--branco);
+    border: 2px solid var(--linha-forte); cursor: pointer;
   }
+  .limites { display: flex; justify-content: space-between; font-size: var(--fs-micro); font-weight: 600; color: var(--cinza-medio); }
 
-  .ajuda { font-size: var(--fs-small); color: var(--cinza-medio); }
-  .erro { font-size: var(--fs-small); color: var(--erro); font-weight: 500; }
-
-  .parcelas { display: flex; gap: var(--s-sm); flex-wrap: wrap; }
-  .parcela { position: relative; }
-  .parcela input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-  .parcela span {
+  .parcelas { border: 0; margin: var(--s-lg) 0 0; padding: 0; }
+  .parcelas legend { font-size: var(--fs-small); font-weight: 600; color: var(--cinza-medio); padding: 0; margin-bottom: var(--s-sm); }
+  .opcoes { display: flex; gap: var(--s-xs); flex-wrap: wrap; }
+  .opcao { position: relative; }
+  .opcao input { position: absolute; inset: 0; opacity: 0; cursor: pointer; margin: 0; }
+  .opcao span {
     display: flex; align-items: center; justify-content: center;
-    min-width: 72px; min-height: 52px;
+    min-width: 64px; min-height: 48px; padding: 0 var(--s-md);
     border-radius: var(--r-pill);
-    background: var(--branco);
-    box-shadow: inset 0 0 0 1px var(--linha-forte);
-    font-weight: 600; font-variant-numeric: tabular-nums;
-    transition: background 160ms var(--ease), box-shadow 160ms var(--ease), color 160ms var(--ease);
+    border: 1.5px solid var(--linha);
+    font-weight: 700; color: var(--cinza-medio);
+    font-variant-numeric: tabular-nums;
+    transition: background 140ms ease-out, border-color 140ms ease-out, color 140ms ease-out;
   }
-  .parcela input:checked + span {
-    background: var(--azul); color: var(--branco);
-    box-shadow: inset 0 0 0 1px var(--azul);
-  }
-  .parcela input:focus-visible + span { outline: 3px solid var(--azul); outline-offset: 2px; }
+  .opcao input:checked + span { border-color: var(--azul); background: var(--azul-suave); color: var(--azul); }
+  .opcao input:focus-visible + span { outline: 3px solid var(--azul); outline-offset: 2px; }
 
   .resultado {
+    margin: var(--s-lg) 0 0;
     background: var(--cinza-claro);
     border-radius: var(--r-xl);
-    padding: clamp(24px, 5vw, 40px);
+    padding: 6px var(--s-md);
   }
-  .valor-saida { margin-top: var(--s-2xs); }
-  .linhas {
-    margin-top: var(--s-lg);
-    display: grid; gap: var(--s-sm);
-    border-top: 1px solid var(--linha);
-    padding-top: var(--s-lg);
+  .resultado > div {
+    display: flex; justify-content: space-between; gap: var(--s-md);
+    padding: 12px 0;
+    border-bottom: 1px solid var(--linha);
+    font-size: var(--fs-body-sm);
   }
-  .linhas > div { display: flex; justify-content: space-between; gap: var(--s-md); flex-wrap: wrap; }
-  .linhas dt { color: var(--cinza-medio); }
-  .linhas dd { margin: 0; font-weight: 600; }
-  .linhas .total { border-top: 1px solid var(--linha); padding-top: var(--s-sm); margin-top: var(--s-2xs); }
+  .resultado > div:last-child { border-bottom: 0; }
+  .resultado dt { font-weight: 500; }
+  .resultado dd { margin: 0; font-weight: 700; color: var(--azul); text-align: right; }
+  .resultado .parcela { padding-block: 14px; }
+  .resultado .parcela dt { font-weight: 800; color: var(--cinza-escuro); }
+  .resultado .parcela dd { font-size: 1.1875rem; font-weight: 800; color: var(--verde-acao); }
 
-  .demo {
-    margin-top: var(--s-lg);
-    font-size: var(--fs-small); line-height: 1.5; color: var(--cinza-medio);
-  }
-  .demo strong { color: var(--cinza-escuro); font-weight: 600; }
+  .mesma-taxa { margin-top: var(--s-sm); font-size: var(--fs-small); color: var(--azul); font-weight: 600; }
 
   .avancar {
     margin-top: var(--s-lg);
     width: 100%;
     min-height: 56px;
-    padding: 16px 32px;
+    padding: 16px 24px;
     border: 0;
     border-radius: var(--r-pill);
     background: var(--verde-acao);
     color: var(--branco);
     font-family: var(--fonte);
-    font-size: var(--fs-body);
-    font-weight: 600;
+    font-size: 1.0625rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 180ms var(--ease), transform 180ms var(--ease), box-shadow 180ms var(--ease);
+    transition: background 150ms ease-out;
   }
-  .avancar:hover { background: var(--verde-acao-profundo); transform: translateY(-2px); box-shadow: var(--sombra-resposta); }
+  .avancar:hover { background: var(--verde-acao-profundo); }
 
   .handoff {
-    margin-top: var(--s-lg);
-    background: var(--branco);
+    margin-top: var(--s-md);
+    background: var(--amarelo-suave);
     border-radius: var(--r-lg);
-    padding: var(--s-lg);
-    border: 1px solid var(--linha);
+    padding: var(--s-md) 18px;
   }
-  .handoff h2 { margin-bottom: var(--s-xs); }
-  .handoff p { color: var(--cinza-medio); font-size: var(--fs-body-sm); line-height: 1.55; }
-  .handoff-agora { margin-top: var(--s-sm); }
+  .handoff h2 { font-size: 1.0625rem; font-weight: 700; margin-bottom: 4px; }
+  .handoff p { font-size: var(--fs-small); line-height: 1.55; }
 
-  .duvidas .lista { margin-top: var(--s-lg); display: grid; gap: var(--s-md); max-width: 64ch; }
-  .duvidas .lista li {
-    padding-left: var(--s-lg);
-    position: relative;
-    color: var(--cinza-medio);
-  }
-  .duvidas .lista li::before {
-    content: '';
-    position: absolute; left: 0; top: 0.62em;
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--verde);
-  }
-  .duvidas .lista strong { color: var(--cinza-escuro); font-weight: 600; }
-  .duvidas :global(.botao) { margin-top: var(--s-md); }
-
-  @media (min-width: 1024px) {
-    .sim-grade { grid-template-columns: 1fr 1fr; gap: var(--s-3xl); }
-  }
+  .nota { margin-top: var(--s-md); text-align: center; font-size: var(--fs-micro); color: var(--cinza-medio); line-height: 1.5; }
 </style>
 
 <script>
-  // Taxa fictícia desta prévia. Troca em src/data/preview.ts quando a real existir.
-  const TAXA_MENSAL = 0.016;
-
-  const brl = (n: number) =>
-    n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-  const campo = document.getElementById('valor') as HTMLInputElement | null;
-  const faixa = document.getElementById('faixa') as HTMLInputElement | null;
-  const erro = document.getElementById('valor-erro') as HTMLElement | null;
-  const saidaValor = document.getElementById('saida-valor');
-  const saidaParcelas = document.getElementById('saida-parcelas');
-  const saidaTotal = document.getElementById('saida-total');
-  const avancar = document.getElementById('avancar');
+  const form = document.getElementById('sim') as HTMLFormElement | null;
+  const faixa = document.getElementById('valor') as HTMLInputElement | null;
   const handoff = document.getElementById('handoff');
+  const taxa = Number(form?.dataset.taxa ?? 0);
 
-  const MIN = 100;
-  const MAX = 1000;
-
-  function parcelasEscolhidas(): number {
-    const marcado = document.querySelector<HTMLInputElement>('input[name="parcelas"]:checked');
-    return marcado ? Number(marcado.value) : 6;
-  }
+  const brl = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const brlInteiro = (n: number) => 'R$ ' + n.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+  const set = (id: string, texto: string) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = texto;
+  };
 
   function calcular() {
-    if (!campo) return;
-    const bruto = campo.value.replace(/\D/g, '');
-    const valor = Number(bruto || 0);
-    const n = parcelasEscolhidas();
+    if (!faixa) return;
+    const valor = Number(faixa.value);
+    const n = Number(document.querySelector<HTMLInputElement>('input[name="parcelas"]:checked')?.value ?? 12);
+    const p = (valor * taxa) / (1 - Math.pow(1 + taxa, -n));
 
-    if (erro) {
-      if (valor < MIN) {
-        erro.textContent = `digite um valor a partir de ${brl(MIN)}`;
-        erro.hidden = false;
-      } else if (valor > MAX) {
-        erro.textContent = `nesta prévia o valor vai até ${brl(MAX)}`;
-        erro.hidden = false;
-      } else {
-        erro.hidden = true;
-      }
-    }
+    const min = Number(faixa.min);
+    const max = Number(faixa.max);
+    faixa.style.setProperty('--pct', `${((valor - min) / (max - min)) * 100}%`);
+    faixa.setAttribute('aria-valuetext', brlInteiro(valor));
 
-    const usado = Math.min(Math.max(valor, MIN), MAX);
-    const i = TAXA_MENSAL;
-    const pmt = (usado * i) / (1 - Math.pow(1 + i, -n));
-
-    if (saidaValor) saidaValor.textContent = brl(usado);
-    if (saidaParcelas) saidaParcelas.textContent = `${n}x de ${brl(pmt)}`;
-    if (saidaTotal) saidaTotal.textContent = brl(pmt * n);
-    if (faixa && valor >= MIN && valor <= MAX) faixa.value = String(usado);
+    set('saida-valor', brlInteiro(valor));
+    set('r-recebe', brl(valor));
+    set('r-n', `${n}x`);
+    set('r-total', brl(p * n));
+    set('r-parcela', `${n}x de ${brl(p)}`);
   }
 
-  campo?.addEventListener('input', calcular);
-  faixa?.addEventListener('input', () => {
-    if (campo && faixa) campo.value = faixa.value;
-    calcular();
-  });
-  document.querySelectorAll('input[name="parcelas"]').forEach((el) =>
-    el.addEventListener('change', calcular)
-  );
+  faixa?.addEventListener('input', calcular);
+  document.querySelectorAll('input[name="parcelas"]').forEach((el) => el.addEventListener('change', calcular));
 
   /**
    * LIMITE DE ENTREGA — ponto único de passagem para a jornada de contratação.
-   * Quando a URL real existir, troque o corpo desta função por um redirect.
+   * Quando a URL real existir, troque o corpo desta função por um redirect que
+   * leve valor, parcelas e os parâmetros de campanha (utm_*) da URL atual.
    * Nada mais no site precisa mudar.
    */
   function irParaContratacao() {
@@ -326,6 +255,6 @@ import { condicoes, contato } from '../data/preview';
     }
   }
 
-  avancar?.addEventListener('click', irParaContratacao);
+  document.getElementById('avancar')?.addEventListener('click', irParaContratacao);
   calcular();
 </script>

@@ -1,14 +1,14 @@
 ---
 interface Props {
   href: string;
-  variante?: 'primario' | 'secundario' | 'sobre-azul' | 'texto';
-  largura?: 'auto' | 'cheia';
+  variante?: 'primario' | 'contorno' | 'texto' | 'azul' | 'amarelo';
+  tamanho?: 'grande' | 'medio';
   class?: string;
 }
-const { href, variante = 'primario', largura = 'auto', class: extra = '' } = Astro.props;
+const { href, variante = 'primario', tamanho = 'grande', class: extra = '' } = Astro.props;
 ---
 
-<a href={href} class:list={['botao', variante, largura, extra]}>
+<a href={href} class:list={['botao', variante, tamanho, extra]}>
   <slot />
 </a>
 
@@ -18,55 +18,29 @@ const { href, variante = 'primario', largura = 'auto', class: extra = '' } = Ast
     align-items: center;
     justify-content: center;
     gap: var(--s-xs);
-    min-height: 56px;
-    padding: 16px 32px;
     border-radius: var(--r-pill);
-    font-size: var(--fs-body);
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.2;
     text-decoration: none;
     text-align: center;
-    transition: background 180ms var(--ease), color 180ms var(--ease),
-                transform 180ms var(--ease), box-shadow 180ms var(--ease);
+    transition: background 150ms ease-out, color 150ms ease-out, transform 120ms ease-out;
   }
-  .cheia { width: 100%; }
+  .grande { min-height: 56px; padding: 16px 32px; font-size: 1.125rem; }
+  .medio { min-height: 48px; padding: 12px 24px; font-size: 1rem; }
+  .botao:active { transform: scale(0.98); }
 
   .primario { background: var(--verde-acao); color: var(--branco); }
-  .primario:hover {
-    background: var(--verde-acao-profundo);
-    color: var(--branco);
-    transform: translateY(-2px);
-    box-shadow: var(--sombra-resposta);
-  }
+  .primario:hover { background: var(--verde-acao-profundo); color: var(--branco); }
 
-  .secundario {
-    background: var(--branco);
-    color: var(--azul);
-    box-shadow: inset 0 0 0 1.5px var(--azul);
-  }
-  .secundario:hover { background: var(--azul-suave); color: var(--azul-profundo); }
+  .contorno { background: transparent; color: var(--azul); box-shadow: inset 0 0 0 2px var(--azul); }
+  .contorno:hover { background: var(--azul-suave); color: var(--azul-profundo); }
 
-  .sobre-azul { background: var(--amarelo); color: var(--cinza-escuro); }
-  .sobre-azul:hover {
-    background: var(--amarelo-pressionado);
-    color: var(--cinza-escuro);
-    transform: translateY(-2px);
-    box-shadow: var(--sombra-resposta);
-  }
+  .texto { background: transparent; color: var(--azul); }
+  .texto:hover { background: var(--azul-suave); color: var(--azul-profundo); }
 
-  .texto {
-    background: none;
-    color: var(--azul);
-    padding: 12px 0;
-    min-height: 44px;
-    text-decoration: underline;
-    text-decoration-color: transparent;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.22em;
-  }
-  .texto:hover { text-decoration-color: currentColor; }
+  .azul { background: var(--azul); color: var(--branco); }
+  .azul:hover { background: var(--azul-profundo); color: var(--branco); }
 
-  @media (max-width: 479px) {
-    .primario, .secundario, .sobre-azul { width: 100%; }
-  }
+  .amarelo { background: var(--amarelo); color: var(--azul); }
+  .amarelo:hover { background: var(--amarelo-pressionado); color: var(--azul-profundo); }
 </style>

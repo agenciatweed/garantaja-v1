@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Botao from '../components/Botao.astro';
+import { contato } from '../data/preview';
+---
+
+<BaseLayout
+  title="Atendimento — Garanta Já"
+  description="Os canais oficiais do Garanta Já: WhatsApp, e-mail e horário de atendimento."
+>
+  <div class="pagina">
+    <a href="/" class="voltar">← início</a>
+    <h1 class="t-pagina">atendimento.</h1>
+    <p class="intro">
+      fale com a gente pelos canais oficiais. nunca pedimos senha do cartão, nem pix
+      ou depósito para liberar dinheiro.
+    </p>
+
+    <div class="canais">
+      <div class="canal whatsapp">
+        <h2>WhatsApp</h2>
+        <p>canal principal. {contato.sla}.</p>
+        {contato.whatsappLink ? (
+          <Botao href={contato.whatsappLink} tamanho="medio">abrir conversa</Botao>
+        ) : (
+          <p class="pendente">{contato.whatsappExibicao}</p>
+        )}
+      </div>
+      <div class="canal">
+        <h2>e-mail</h2>
+        <p><a href={`mailto:${contato.email}`}>{contato.email}</a></p>
+      </div>
+      <div class="canal">
+        <h2>horário</h2>
+        <p>{contato.horario}.</p>
+      </div>
+    </div>
+
+    <div class="ja-contratou">
+      <div>
+        <h2>já contratou?</h2>
+        <p>veja em que etapa está a sua operação.</p>
+      </div>
+      <Botao href="/acompanhar" variante="contorno" tamanho="medio">acompanhar operação</Botao>
+    </div>
+
+    <p class="provisorio">canais e horário provisórios nesta prévia — os definitivos entram antes do lançamento.</p>
+  </div>
+</BaseLayout>
+
+<style>
+  .canais {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+    gap: 20px;
+  }
+  .canal {
+    background: var(--cinza-claro);
+    border-radius: var(--r-xl);
+    padding: 26px;
+  }
+  .canal h2 { font-size: 1.1875rem; font-weight: 700; margin-bottom: var(--s-xs); }
+  .canal p { overflow-wrap: anywhere; }
+  .whatsapp { background: var(--verde-suave); }
+  .whatsapp p { margin-bottom: 18px; }
+  .pendente { font-weight: 600; color: var(--cinza-medio); margin-bottom: 0 !important; }
+
+  .ja-contratou {
+    margin-top: var(--s-lg);
+    border: 1px solid var(--linha);
+    border-radius: var(--r-xl);
+    padding: 22px 26px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-md);
+    align-items: center;
+    justify-content: space-between;
+  }
+  .ja-contratou h2 { font-size: 1.1875rem; font-weight: 700; margin-bottom: 4px; }
+
+  .provisorio { margin-top: var(--s-lg); font-size: var(--fs-small); color: var(--cinza-medio); }
+</style>

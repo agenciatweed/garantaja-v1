@@ -1,0 +1,62 @@
+---
+import Botao from './Botao.astro';
+
+interface Props {
+  destaque?: string;
+  titulo?: string;
+  texto?: string;
+  botao?: string;
+}
+const {
+  destaque = 'veja quanto você pode receber.',
+  titulo = 'leva menos de um minuto.',
+  texto = 'sem compromisso: a simulação mostra valor, parcelas e custo total antes de qualquer confirmação.',
+  botao = 'simular agora',
+} = Astro.props;
+---
+
+<div class="chamada">
+  <img class="simbolo" src="/img/simbolo-g.svg" alt="" aria-hidden="true" width="320" height="306" loading="lazy" />
+  <div class="texto">
+    <p class="linha amarela">{destaque}</p>
+    <p class="linha">{titulo}</p>
+    <p class="apoio">{texto}</p>
+  </div>
+  <div class="acao">
+    <Botao href="/simulador" variante="amarelo">{botao}</Botao>
+  </div>
+</div>
+
+<style>
+  .chamada {
+    background: var(--azul);
+    border-radius: var(--r-2xl);
+    padding: clamp(28px, 4.5vw, 52px);
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+    align-items: center;
+  }
+  .simbolo {
+    position: absolute;
+    right: -80px;
+    bottom: -110px;
+    width: 320px;
+    height: auto;
+    pointer-events: none;
+    opacity: 0.9;
+  }
+  .texto, .acao { position: relative; z-index: 1; }
+  .acao { justify-self: start; }
+  .linha {
+    color: var(--branco);
+    font-size: clamp(1.5rem, 3.2vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  .amarela { color: var(--amarelo); }
+  .apoio { color: var(--branco); margin-top: var(--s-md); font-size: var(--fs-body); max-width: 40ch; }
+</style>

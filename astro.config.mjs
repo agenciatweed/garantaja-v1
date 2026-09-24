@@ -11,5 +11,9 @@ const site = process.env.VERCEL_PROJECT_PRODUCTION_URL
 export default defineConfig({
   site,
   integrations: [sitemap()],
+  redirects: {
+    '/faq': '/duvidas',
+    '/politicas': '/termos',
+  },
   build: { inlineStylesheets: 'auto' },
 });
